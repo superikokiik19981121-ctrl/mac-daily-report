@@ -1,0 +1,19 @@
+<article class="card">
+  <div class="card-body">
+    <div class="source">{{ item.published_display }} / {{ item.source_name }}</div>
+    <h3 class="title">{{ item.title }}</h3>
+    <p class="summary">{{ item.summary_display }}</p>
+    <div class="metrics">
+      {% if item.platform == "x" %}
+        <span class="metric">インプレッション {{ "{:,}".format(item.impression_count or item.view_count) }}</span>
+        <span class="metric">いいね {{ "{:,}".format(item.like_count) }}</span>
+        <span class="metric">リポスト {{ "{:,}".format(item.repost_count) }}</span>
+      {% else %}
+        <span class="metric">再生 {{ "{:,}".format(item.view_count) }}</span>
+        <span class="metric">いいね {{ "{:,}".format(item.like_count) }}</span>
+        <span class="metric">コメント {{ "{:,}".format(item.comment_count) }}</span>
+      {% endif %}
+    </div>
+    <div class="source"><a href="{{ item.post_url or item.source_url }}">投稿URL</a></div>
+  </div>
+</article>

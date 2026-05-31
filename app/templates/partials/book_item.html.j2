@@ -1,0 +1,14 @@
+<article class="book-row">
+  <div class="book-meta">
+    {% if item.growth_reason %}
+      <div class="book-author">{{ item.growth_reason }}</div>
+    {% endif %}
+    <div class="source" style="margin-top:4px">{{ item.source_name }}</div>
+  </div>
+  <div>
+    <h3 class="title">
+      <a class="title-link" href="{{ item.source_url }}" target="_blank" rel="noopener noreferrer">{{ item.title }}</a>
+    </h3>
+    <p class="summary">{{ item.summary_display }}</p>
+  </div>
+</article>

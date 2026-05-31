@@ -1,0 +1,234 @@
+{
+  "sources": [
+    {
+      "name": "マクドナルド公式",
+      "category": "official",
+      "url": "https://www.mcdonalds.co.jp/",
+      "source_type": "web",
+      "enabled": true,
+      "keywords": ["マクドナルド", "マック", "新商品", "キャンペーン"]
+    },
+    {
+      "name": "日本マクドナルドIR",
+      "category": "official",
+      "url": "https://www.mcdonalds.co.jp/company/ir/",
+      "source_type": "web",
+      "enabled": true,
+      "keywords": ["マクドナルド", "決算", "売上"]
+    },
+    {
+      "name": "PR TIMES",
+      "category": "news",
+      "url": "https://prtimes.jp/",
+      "source_type": "web",
+      "enabled": true,
+      "keywords": ["ハンバーガー", "ファストフード", "バーガー"]
+    },
+    {
+      "name": "X検索",
+      "category": "sns",
+      "url": "https://x.com/search",
+      "source_type": "x",
+      "enabled": true,
+      "keywords": ["マクドナルド", "マック", "食べたい", "売り切れ"]
+    },
+    {
+      "name": "YouTube検索",
+      "category": "sns",
+      "url": "https://www.youtube.com/",
+      "source_type": "youtube",
+      "enabled": true,
+      "keywords": ["マクドナルド 新作", "バーガー レビュー"]
+    },
+    {
+      "name": "TikTok検索",
+      "category": "sns",
+      "url": "https://www.tiktok.com/",
+      "source_type": "tiktok",
+      "enabled": true,
+      "keywords": ["マクドナルド", "マックハック", "ファストフード"]
+    },
+    {
+      "name": "Instagram検索",
+      "category": "sns",
+      "url": "https://www.instagram.com/",
+      "source_type": "instagram",
+      "enabled": true,
+      "keywords": ["マクドナルド", "バーガー", "マックカフェ"]
+    },
+    {
+      "name": "Google Trends",
+      "category": "trend",
+      "url": "https://trends.google.co.jp/trends/",
+      "source_type": "google_trends",
+      "enabled": true,
+      "keywords": ["マクドナルド", "マックフライポテト", "ファストフード"]
+    },
+    {
+      "name": "競合ウォッチ",
+      "category": "competitor",
+      "url": "https://www.mos.co.jp/",
+      "source_type": "web",
+      "enabled": true,
+      "keywords": ["モスバーガー", "バーガーキング", "ケンタッキー", "KFC", "ロッテリア", "ウェンディーズ", "フレッシュネスバーガー", "サブウェイ"]
+    }
+  ],
+  "items": [
+    {
+      "title": "マクドナルド新作バーガー、夏季限定スパイシーシリーズ発表",
+      "source_name": "マクドナルド公式",
+      "source_url": "https://www.mcdonalds.co.jp/sample/2026-06-01-spicy",
+      "published_at": "2026-06-01T09:00:00+09:00",
+      "category": "official",
+      "raw_text": "マクドナルドは、夏季限定のスパイシーシリーズを発表。新感覚の辛みと旨みを組み合わせた商品で、SNSでは食べたい、辛さが気になる、という反応が目立つ。",
+      "original_excerpt": "夏季限定のスパイシーシリーズを発表。新感覚の辛みと旨みを組み合わせた商品。",
+      "platform": "web"
+    },
+    {
+      "title": "日本マクドナルドIR、既存店売上高の増加と客単価上昇に言及",
+      "source_name": "日本マクドナルドIR",
+      "source_url": "https://www.mcdonalds.co.jp/company/ir/sample/2026-06-01",
+      "published_at": "2026-06-01T10:30:00+09:00",
+      "category": "official",
+      "raw_text": "日本マクドナルドのIR資料では、既存店売上高の増加と客単価上昇が示された。モバイルオーダーとデジタルクーポン利用が拡大し、来店頻度の向上に寄与している。",
+      "original_excerpt": "既存店売上高の増加と客単価上昇が示された。モバイルオーダーとデジタルクーポン利用が拡大。",
+      "platform": "web"
+    },
+    {
+      "title": "ファストフード各社、夏メニューと期間限定キャンペーン競争が激化",
+      "source_name": "PR TIMES",
+      "source_url": "https://prtimes.jp/sample/fastfood-summer-2026-06-01",
+      "published_at": "2026-06-01T08:15:00+09:00",
+      "category": "news",
+      "raw_text": "ファストフード各社は夏の期間限定メニューを相次いで発表。価格競争とプレミアム路線が混在し、消費者の選択肢が広がっている。モバイルアプリのクーポン争奪戦も続く。",
+      "original_excerpt": "夏の期間限定メニューを相次いで発表。価格競争とプレミアム路線が混在。",
+      "platform": "web"
+    },
+    {
+      "title": "Xで『マクドナルド新作スパイシー、絶対食べたい』投稿が拡散",
+      "source_name": "X検索",
+      "source_url": "https://x.com/sample/status/mac1001",
+      "published_at": "2026-06-01T11:42:00+09:00",
+      "category": "sns",
+      "raw_text": "マクドナルド新作スパイシーシリーズ。これは食べたい。期間限定だから早めに行かないと。見た目も映えるし友達と行くのにもいい。",
+      "original_excerpt": "マクドナルド新作スパイシーシリーズ。これは食べたい。期間限定だから早めに。",
+      "platform": "x",
+      "like_count": 15200,
+      "repost_count": 4100,
+      "comment_count": 820,
+      "view_count": 1050000,
+      "impression_count": 1050000,
+      "post_url": "https://x.com/sample/status/mac1001"
+    },
+    {
+      "title": "YouTubeでマクドナルド新作バーガー食べ比べ動画が急伸",
+      "source_name": "YouTube検索",
+      "source_url": "https://www.youtube.com/watch?v=mac1002",
+      "published_at": "2026-06-01T07:20:00+09:00",
+      "category": "sns",
+      "raw_text": "マクドナルド、バーガーキング、モスバーガーを食べ比べ。コスパが高い、ボリュームがある、子どもも大人も楽しめるというコメントが多い。",
+      "original_excerpt": "マクドナルド、バーガーキング、モスバーガーを食べ比べ。コスパが高く、ボリュームも満足。",
+      "platform": "youtube",
+      "like_count": 6800,
+      "repost_count": 0,
+      "comment_count": 520,
+      "view_count": 310000,
+      "post_url": "https://www.youtube.com/watch?v=mac1002",
+      "thumbnail_url": "https://placehold.co/1280x720/DA291C/ffffff.png?text=McDonald%27s+Burger+Review"
+    },
+    {
+      "title": "TikTokでマクドナルドハック動画が急拡散、ポテトの食べ方が話題",
+      "source_name": "TikTok検索",
+      "source_url": "https://www.tiktok.com/@sample/video/mac1003",
+      "published_at": "2026-06-01T12:05:00+09:00",
+      "category": "sns",
+      "raw_text": "マックフライポテトをソースにつける独自の食べ方を紹介。これは知らなかった、やってみたい、旨そうというコメントが殺到。",
+      "original_excerpt": "マックフライポテトの独自の食べ方を紹介。これは知らなかった、やってみたいというコメントが殺到。",
+      "platform": "tiktok",
+      "like_count": 12400,
+      "repost_count": 2300,
+      "comment_count": 680,
+      "view_count": 890000,
+      "impression_count": 890000,
+      "post_url": "https://www.tiktok.com/@sample/video/mac1003"
+    },
+    {
+      "title": "Instagramでマックカフェのスイーツ投稿が保存急増",
+      "source_name": "Instagram検索",
+      "source_url": "https://www.instagram.com/p/mac1004/",
+      "published_at": "2026-06-01T13:10:00+09:00",
+      "category": "sns",
+      "raw_text": "マックカフェの新作フラッペの投稿。映える、テイクアウトで買いたい、夏にぴったりという共感コメントが多い。",
+      "original_excerpt": "マックカフェの新作フラッペの投稿。映える、テイクアウトで買いたい、夏にぴったり。",
+      "platform": "instagram",
+      "like_count": 5100,
+      "repost_count": 310,
+      "comment_count": 240,
+      "view_count": 120000,
+      "impression_count": 120000,
+      "post_url": "https://www.instagram.com/p/mac1004/"
+    },
+    {
+      "title": "Google Trendsで『マクドナルド スパイシー』検索が上昇",
+      "source_name": "Google Trends",
+      "source_url": "https://trends.google.co.jp/trends/sample/mac-spicy",
+      "published_at": "2026-06-01T06:00:00+09:00",
+      "category": "trend",
+      "raw_text": "マクドナルド スパイシー、バーガー 新作、ファストフード 限定の検索関心が朝から上昇。発売日、価格、カロリーに関する検索も増えている。",
+      "original_excerpt": "マクドナルド スパイシー、バーガー 新作の検索関心が朝から上昇。発売日や価格検索も増加。",
+      "platform": "google_trends"
+    },
+    {
+      "title": "モスバーガー、国産野菜強化の新バーガーをプレミアム価格で投入",
+      "source_name": "競合ウォッチ",
+      "source_url": "https://www.mos.co.jp/sample/vege-burger-2026-06-01",
+      "published_at": "2026-06-01T09:30:00+09:00",
+      "category": "competitor",
+      "raw_text": "モスバーガーは国産野菜を強化した新バーガーを発表。健康志向とプレミアム価格帯を前面に打ち出し、差別化を図る。価格はやや高めだが品質訴求で支持を集める戦略。",
+      "original_excerpt": "国産野菜を強化した新バーガーを発表。健康志向とプレミアム価格帯を前面に打ち出し。",
+      "platform": "web"
+    },
+    {
+      "title": "マクドナルド新作スパイシー販売初日、SNSで購入報告が急増",
+      "source_name": "マクドナルド公式",
+      "source_url": "https://www.mcdonalds.co.jp/sample/2026-06-02-first-day",
+      "published_at": "2026-06-02T09:10:00+09:00",
+      "category": "official",
+      "raw_text": "マクドナルドのスパイシーシリーズ販売初日。購入報告や食べたいという反応が増え、昼には混雑情報もSNSに流れ始めている。",
+      "original_excerpt": "スパイシーシリーズ販売初日。購入報告や食べたいという反応が急増。",
+      "platform": "web"
+    },
+    {
+      "title": "Xで『マクドナルド並んでも買う価値ある』投稿が伸長",
+      "source_name": "X検索",
+      "source_url": "https://x.com/sample/status/mac2001",
+      "published_at": "2026-06-02T12:25:00+09:00",
+      "category": "sns",
+      "raw_text": "マクドナルドのスパイシーバーガー並んで買った。辛さがちょうどいい。これは並ぶ価値ある。モバイルオーダーで事前注文がおすすめという声も。",
+      "original_excerpt": "スパイシーバーガー並んで買った。辛さがちょうどいい。並ぶ価値ありという反応。",
+      "platform": "x",
+      "like_count": 9200,
+      "repost_count": 2400,
+      "comment_count": 380,
+      "view_count": 680000,
+      "impression_count": 680000,
+      "post_url": "https://x.com/sample/status/mac2001"
+    },
+    {
+      "title": "YouTubeで販売初日レビュー動画が公開、辛さ評価が話題に",
+      "source_name": "YouTube検索",
+      "source_url": "https://www.youtube.com/watch?v=mac2002",
+      "published_at": "2026-06-02T18:00:00+09:00",
+      "category": "sns",
+      "raw_text": "販売初日にマクドナルド新作スパイシーシリーズをレビュー。辛さレベルの評価と価格についてのコメントが多く、購入前の比較材料として視聴されている。",
+      "original_excerpt": "販売初日にスパイシーシリーズをレビュー。辛さレベルと価格評価が購入比較材料に。",
+      "platform": "youtube",
+      "like_count": 4300,
+      "repost_count": 0,
+      "comment_count": 290,
+      "view_count": 185000,
+      "post_url": "https://www.youtube.com/watch?v=mac2002",
+      "thumbnail_url": "https://placehold.co/1280x720/FFC72C/000000.png?text=McDonald%27s+Spicy+Review"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+<a class="card card-link" href="{{ item.post_url or item.source_url }}" target="_blank" rel="noopener noreferrer">
+  {% if item.thumbnail_url %}
+    <img class="thumb" src="{{ item.thumbnail_url }}" alt="">
+  {% endif %}
+  <div class="card-body">
+    <div class="source">{{ item.published_display }} / {{ item.source_name }}</div>
+    <h3 class="title">{{ item.title }}</h3>
+    <p class="summary">{{ item.summary_display }}</p>
+    <div class="metrics">
+      <span class="metric">再生 {{ "{:,}".format(item.view_count) }}</span>
+      <span class="metric">いいね {{ "{:,}".format(item.like_count) }}</span>
+      <span class="metric">コメント {{ "{:,}".format(item.comment_count) }}</span>
+      {% if "Shorts" in item.original_excerpt or "短尺動画" in item.original_excerpt %}
+        <span class="metric">Shorts</span>
+      {% endif %}
+    </div>
+    <p class="reason">{{ item.why_it_matters }}</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>

@@ -1,0 +1,90 @@
+{
+  "brand_name": "マクドナルド",
+  "short_name": "マック",
+  "domain_terms": ["バーガー", "ハンバーガー", "ファストフード", "フライドポテト", "チキン"],
+  "product_terms": ["ビッグマック", "マックフライポテト", "チキンマックナゲット", "マックシェイク", "てりやきマックバーガー", "チキンフィレオ", "マックカフェ", "ハッピーセット"],
+  "competitor_terms": ["モスバーガー", "バーガーキング", "ケンタッキー", "ロッテリア", "ウェンディーズ", "フレッシュネスバーガー", "サブウェイ"],
+  "google_news_queries": [
+    {
+      "source_name": "Google News - マクドナルド",
+      "category": "official",
+      "query": "マクドナルド OR マック 新商品",
+      "keywords": ["マクドナルド", "マック", "ビッグマック", "マックフライポテト", "ハッピーセット", "マックカフェ"]
+    },
+    {
+      "source_name": "マクドナルド公式サイト",
+      "category": "official",
+      "query": "site:mcdonalds.co.jp マクドナルド",
+      "keywords": ["マクドナルド", "McDonald", "新商品", "キャンペーン", "期間限定"]
+    },
+    {
+      "source_name": "PR TIMES - マクドナルド",
+      "category": "news",
+      "query": "site:prtimes.jp マクドナルド OR McDonald's",
+      "keywords": ["マクドナルド", "McDonald", "マック", "バーガー"]
+    },
+    {
+      "source_name": "Google News - バーガー/ファストフード",
+      "category": "news",
+      "query": "ハンバーガー バーガー OR ファストフード",
+      "keywords": ["ハンバーガー", "バーガー", "ファストフード", "チキン", "フライドポテト"]
+    },
+    {
+      "source_name": "モスバーガー - ニュース",
+      "category": "competitor",
+      "query": "モスバーガー 新商品 OR キャンペーン OR 店舗 OR 売上",
+      "keywords": ["モスバーガー", "mos burger"]
+    },
+    {
+      "source_name": "バーガーキング - ニュース",
+      "category": "competitor",
+      "query": "バーガーキング 新商品 OR キャンペーン OR 店舗 OR 売上",
+      "keywords": ["バーガーキング", "burger king"]
+    },
+    {
+      "source_name": "KFC - ニュース",
+      "category": "competitor",
+      "query": "ケンタッキー KFC 新商品 OR キャンペーン OR 店舗",
+      "keywords": ["ケンタッキー", "KFC", "ケンタッキーフライドチキン"]
+    },
+    {
+      "source_name": "ロッテリア - ニュース",
+      "category": "competitor",
+      "query": "ロッテリア 新商品 OR キャンペーン OR 店舗",
+      "keywords": ["ロッテリア", "lotteria"]
+    }
+  ],
+  "youtube_queries": [
+    "マクドナルド 新作",
+    "マクドナルド 食べてみた",
+    "マクドナルド ハック",
+    "ビッグマック レビュー"
+  ],
+  "related_rules": [
+    ["マクドナルド", "マクドナルドに直接言及"],
+    ["マック", "マックに直接言及"],
+    ["ビッグマック", "定番商品ビッグマックに言及"],
+    ["マックフライポテト", "看板商品ポテトに言及"],
+    ["ハンバーガー", "ハンバーガーカテゴリの話題"],
+    ["バーガー", "バーガーカテゴリの話題"],
+    ["ファストフード", "ファストフード全般の話題"],
+    ["マックカフェ", "カフェ部門の話題"],
+    ["ハッピーセット", "子供向け商品の話題"],
+    ["チキン", "チキン系商品の話題"]
+  ],
+  "official_news": {
+    "enabled": false,
+    "source_name": "マクドナルド公式ニュース",
+    "url": "https://www.mcdonalds.co.jp/company/news/",
+    "link_prefix": "https://www.mcdonalds.co.jp"
+  },
+  "messages": {
+    "official_why": "商品・キャンペーン・IRの一次情報として、担当業務の前提確認に直結します。",
+    "competitor_why": "競合の価格、限定商品、販売導線の変化は、マクドナルドの企画比較軸になります。",
+    "sns_why": "生活者の反応が早く出るため、店頭訴求やSNS投稿の改善ヒントになります。",
+    "default_why": "ハンバーガー、ファストフード、チキン周辺の需要変化を把握する材料になります。",
+    "unknown_related": "マック/バーガー/ファストフードとの関連度は内容確認が必要",
+    "competitor_insight": "競合の勝ち筋を、マクドナルドならではの価格競争力・店舗網・デジタル戦略に翻訳して検討できます。",
+    "default_insight": "朝会では、商品企画・SNS投稿・店頭POPのどれに活かせるかを分けて確認すると使いやすいです。"
+  }
+}

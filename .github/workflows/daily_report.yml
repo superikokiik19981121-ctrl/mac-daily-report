@@ -1,0 +1,58 @@
+name: MacDailyReport - 日次更新
+
+on:
+  schedule:
+    - cron: '0 21 * * *'   # 毎日 6:00 JST (= 前日 21:00 UTC)
+  workflow_dispatch:
+    inputs:
+      date:
+        description: '対象日 YYYY-MM-DD（省略時は今日）'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  daily-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run daily update
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          TZ: Asia/Tokyo
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            python main.py collect --date "${{ github.event.inputs.date }}"
+            python main.py generate
+          else
+            python main.py daily-update
+          fi
+
+      - name: Commit and push results
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add data/mac_daily.db reports/index.html next_site/src/data/reportData.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "daily-update: $(TZ=Asia/Tokyo date +%Y-%m-%d)"
+            git push
+          fi

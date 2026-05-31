@@ -1,0 +1,18 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# 環境変数（APIキーを含むため必ずignore）
+.env
+
+# ログ
+logs/*.log
+
+# データベースはGitHub Actionsで永続化するためignoreしない
+# data/mac_daily.db  ← コミット対象
+
+# エディタ
+.vscode/
+.idea/

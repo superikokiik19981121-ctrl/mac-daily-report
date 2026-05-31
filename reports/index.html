@@ -1,0 +1,3170 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>マクドナルド日次レポート</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #6b6b6b;
+      --line: #e8ddd0;
+      --brand: #DA291C;
+      --brand-dark: #a81d13;
+      --accent: #FFC72C;
+      --cream: #fffbf5;
+      --soft: #fff3cc;
+      --card: #ffffff;
+      --link: #1558aa;
+      --active-bg: #fff3cd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: "Yu Gothic", "YuGothic", "Meiryo", system-ui, sans-serif;
+      line-height: 1.65;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--brand);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+    }
+    header::before { display: none; }
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 28px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    /* Golden Arches logo (CSS) */
+    .mc-logo {
+      display: inline-flex;
+      gap: 4px;
+      align-items: flex-end;
+      height: 44px;
+      flex-shrink: 0;
+    }
+    .mc-arch {
+      width: 20px;
+      height: 40px;
+      border: 8px solid var(--accent);
+      border-bottom: none;
+      border-radius: 50% 50% 0 0 / 60% 60% 0 0;
+      box-sizing: border-box;
+    }
+    .header-text { flex: 1; min-width: 0; }
+    h1 {
+      margin: 0;
+      color: var(--accent);
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .date {
+      margin-top: 3px;
+      color: rgba(255,255,255,0.85);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .window {
+      margin-top: 2px;
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .date-picker {
+      position: relative;
+      display: inline-block;
+      margin-top: 8px;
+    }
+    .date-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 7px 13px;
+      border: 1.5px solid var(--accent);
+      border-radius: 999px;
+      color: var(--accent);
+      background: rgba(255,255,255,0.08);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .date-trigger:hover,
+    .date-trigger[aria-expanded="true"] {
+      background: var(--accent);
+      color: var(--brand);
+    }
+    .date-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      z-index: 20;
+      display: none;
+      min-width: 180px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.2);
+    }
+    .date-picker.open .date-menu {
+      display: grid;
+      gap: 4px;
+    }
+    .date-option {
+      width: 100%;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--ink);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+    }
+    .date-option:hover,
+    .date-option.active {
+      color: var(--brand);
+      background: var(--active-bg);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px 18px 52px;
+    }
+    .report-panel {
+      display: none;
+    }
+    .report-panel.active {
+      display: block;
+    }
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 32px 0 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--brand);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 800;
+    }
+    h2::before { display: none; }
+    .h2-icon {
+      font-size: 20px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .section-count {
+      margin-left: auto;
+      color: rgba(255,255,255,0.75);
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(0,0,0,0.15);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    a {
+      color: var(--link);
+      overflow-wrap: anywhere;
+    }
+    .list {
+      display: grid;
+      gap: 8px;
+    }
+    .news-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+    .news-date {
+      color: var(--brand);
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .title {
+      margin: 0 0 5px;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+    .summary {
+      margin: 0 0 4px;
+      color: #3a3a3a;
+      font-size: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .digest {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 20px;
+    }
+    .digest-item {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--accent);
+      border-radius: 12px;
+      background: var(--soft);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .ai-summary {
+      margin: 0 0 24px;
+      padding: 16px 20px;
+      border: 1px solid #f0d97a;
+      border-left: 6px solid var(--accent);
+      border-radius: 14px;
+      background: linear-gradient(135deg, #fffdf0 0%, #fff8e1 100%);
+      box-shadow: 0 2px 8px rgba(255,199,44,0.15);
+    }
+    .ai-summary-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 8px;
+      color: var(--brand-dark);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .ai-summary-label::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .ai-summary-text {
+      margin: 0;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.8;
+    }
+    .reason {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+    .source {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--card);
+      box-shadow: 0 2px 0 rgba(168, 29, 19, 0.05);
+    }
+    .card-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+    }
+    .card-link:hover {
+      border-color: var(--brand);
+      box-shadow: 0 4px 0 rgba(168, 29, 19, 0.10);
+      transform: translateY(-1px);
+    }
+    .card-body {
+      padding: 14px;
+    }
+    .thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      background: var(--soft);
+    }
+    .metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0;
+    }
+    .metric {
+      padding: 5px 8px;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .refs {
+      padding: 12px 12px 12px 30px;
+      font-size: 13px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+    .empty {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .section-count {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .collapsible .extra-item {
+      display: none;
+    }
+    .collapsible.expanded .extra-item {
+      display: grid;
+    }
+    .competitor-company {
+      margin-bottom: 18px;
+    }
+    .competitor-company-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 8px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: var(--accent);
+      border: none;
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .book-row {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+      box-shadow: 0 2px 0 rgba(168,29,19,0.04);
+    }
+    .book-meta {
+      color: var(--brand-dark);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.6;
+    }
+    .book-author {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+    .show-more {
+      width: 100%;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--brand-dark);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .show-more:hover {
+      border-color: var(--brand);
+      background: var(--active-bg);
+    }
+    .title-link {
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .title-link:hover {
+      color: var(--brand);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    @media (max-width: 680px) {
+      header { padding: 0 16px 12px; }
+      header::before { margin: 0 -16px 14px; }
+      main { padding: 14px 14px 36px; }
+      h1 { font-size: 21px; }
+      .news-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <!-- McDonald's Golden Arches (CSS logo) -->
+      <div class="mc-logo" aria-hidden="true">
+        <div class="mc-arch"></div>
+        <div class="mc-arch"></div>
+      </div>
+      <div class="header-text">
+        <h1>マクドナルド日次レポート</h1>
+        <div class="date" id="current-date">2026-05-31</div>
+        <div class="window" id="current-window">
+          対象期間: 2026/05/31 00:00 - 2026/06/01 00:00
+        </div>
+        
+          <div class="date-picker" id="date-picker">
+            <button class="date-trigger" id="date-trigger" type="button" aria-expanded="false" aria-haspopup="listbox">
+              📅 <span id="selected-date-label">2026-05-31</span>
+            </button>
+            <div class="date-menu" role="listbox" aria-label="レポート日付">
+              
+                <button class="date-option active" type="button" data-date="2026-05-31">2026-05-31</button>
+              
+                <button class="date-option" type="button" data-date="2026-05-30">2026-05-30</button>
+              
+                <button class="date-option" type="button" data-date="2026-05-29">2026-05-29</button>
+              
+                <button class="date-option" type="button" data-date="2026-05-28">2026-05-28</button>
+              
+                <button class="date-option" type="button" data-date="2026-05-27">2026-05-27</button>
+              
+                <button class="date-option" type="button" data-date="2026-05-26">2026-05-26</button>
+              
+                <button class="date-option" type="button" data-date="2026-05-25">2026-05-25</button>
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+  </header>
+  <main>
+    
+      
+          
+        <section class="report-panel active" data-panel="2026-05-31" data-window="2026/05/31 00:00 - 2026/06/01 00:00">
+          
+          
+            <div class="ai-summary">
+              <div class="ai-summary-label">🤖 AI · 本日のマクドナルドサマリー</div>
+              <p class="ai-summary-text">YouTubeでは「全然朝だけじゃなかったwww#夫婦の休日 #マック新作 #食事vlog」が1,349回再生されています。競合ではモスバーガー「食感に沼るぅぅぅ！【モスバーガー】の「新作スイーツ」食べてみた | チバテレ＋プラス」、モスバーガー「食感に沼るぅぅぅ！【モスバーガー】の「新作スイーツ」食べてみた」、KFC「75歳・モト冬樹、ケンタッキーの定番注文メニュー明かす「いまはこれ一択だね」 初めてKFCのチキンを食べたのは50年前」、ロッテリア「＜画像4 / 4＞ロッテリアの「ヱヴァ」キャンペーン、第5弾は“ランチクロス”付き」などの動きが確認されています。</p>
+            </div>
+          
+          <h2><span class="h2-icon">☀️</span>今日のまとめ</h2>
+          <section class="digest">
+            
+              <div class="digest-item">YouTubeでは「全然朝だけじゃなかったwww#夫婦の休日 #マック新作 #食事vlog」が1,349回再生されています。サムネイルとタイトルの見せ方は、SNS投稿や店頭訴求の参考になりそうです。</div>
+            
+              <div class="digest-item">競合・隣接業界では「画像2 / 6＞ハンバーガーブームをアンケート調査！好きなバーガーチェーン第1位は？他業界からの参入にも注目」を押さえておきたいです。価格、メニュー戦略、デジタル施策の見せ方をマック企画と比較できます。</div>
+            
+          </section>
+          
+          
+            
+            <h2><span class="h2-icon">🎬</span>YouTube注目動画<span class="section-count">5件</span></h2>
+            
+              
+                <section class="cards">
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=nmC_qsZvPJY" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/nmC_qsZvPJY/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/31 00:30 / YouTube - たくりの夫婦</div>
+    <h3 class="title">全然朝だけじゃなかったwww#夫婦の休日 #マック新作 #食事vlog</h3>
+    <p class="summary">SNS話題として「全然朝だけじゃなかったwww#夫婦の休日 #マック新作 #食事vlog」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 1,349</span>
+      <span class="metric">いいね 3</span>
+      <span class="metric">コメント 0</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">マックに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=xe9gAPY7yq0" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/xe9gAPY7yq0/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/31 11:20 / YouTube - The Sahu Network</div>
+    <h3 class="title">Trying The Free Redbull Hack At McDonald's! 🥤 #foodhacks #fails #comedy</h3>
+    <p class="summary">SNS話題として「Trying The Free Redbull Hack At McDonald's! 🥤 #foodhacks #fails #comedy」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 1,175</span>
+      <span class="metric">いいね 0</span>
+      <span class="metric">コメント 1</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=tJykM9nXyB0" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/tJykM9nXyB0/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/31 14:06 / YouTube - 47歳わたちの新婚生活♡</div>
+    <h3 class="title">マックのご当地バーガー食べてみた😄</h3>
+    <p class="summary">SNS話題として「マックのご当地バーガー食べてみた😄」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 1,285</span>
+      <span class="metric">いいね 1</span>
+      <span class="metric">コメント 0</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">マックに直接言及、バーガーカテゴリの話題</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=AQ2GOeFB52g" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/AQ2GOeFB52g/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/31 10:03 / YouTube - ベーグルゆこ</div>
+    <h3 class="title">朝マック #ショート動画 #マック新作 #マクドナルド #マクド #ショート#シングルマザー #food</h3>
+    <p class="summary">SNS話題として「朝マック #ショート動画 #マック新作 #マクドナルド #マクド #ショート#シングルマザー #food」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 255</span>
+      <span class="metric">いいね 1</span>
+      <span class="metric">コメント 1</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及、マックに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=ZKFdtrGNw2g" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/ZKFdtrGNw2g/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/31 00:45 / YouTube - TCM Awaaz</div>
+    <h3 class="title">🍔 McDonald's Ka Secret Sales Hack Revealed🔥: #mcdonalds ,#salestips ,#shortsfeed</h3>
+    <p class="summary">SNS話題として「🍔 McDonald's Ka Secret Sales Hack Revealed🔥: #mcdonalds ,#salestips ,#shortsfeed」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 227</span>
+      <span class="metric">いいね 1</span>
+      <span class="metric">コメント 0</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">🍔</span>マクドナルド関連ニュース</h2>
+            
+              <p class="empty">該当データはありません。</p>
+            
+          
+            
+            <h2><span class="h2-icon">📱</span>X / Instagram / TikTokで伸びている話題</h2>
+            
+              <p class="empty">該当データはありません。</p>
+            
+          
+
+          
+          
+          
+          <h2><span class="h2-icon">🏁</span>競合・隣接業界の動き<span class="section-count">4件</span></h2>
+          
+          
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">モスバーガー</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/31 07:16</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiZEFVX3lxTFB1Y2ZqMHZ6RlhJM3JURzVmaHNZQnZxaVNuVVJ3WXM5U1NYcWdKSnR0SC1yNGlmNG03V0NzOUpnMERGaW9YSldxZjctNm5UMzhNVElHU1NtSXBuRWthNWVhYWRDZ07SAWRBVV95cUxQdWNmajB2ekZYSTNyVEc1ZmhzWUJ2cWlTblVSd1lzOVNTWHFnSkp0dEgtcjRpZjRtN1dDczlKZzBERmlvWEpXcWY3LTZuVDM4TVRJR1NTbUlwbkVrYTVlYWFkQ2dO?oc=5" target="_blank" rel="noopener noreferrer">食感に沼るぅぅぅ！【モスバーガー】の「新作スイーツ」食べてみた | チバテレ＋プラス</a></h3>
+    <p class="summary">競合動向として「食感に沼るぅぅぅ！【モスバーガー】の「新作スイーツ」食べてみた | チバテレ＋プラス」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/31 07:05</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiogFBVV95cUxObWIwSVN6bnYzb1FCU3l5eUNsRlVIS2RybE1RRGtva0ktZW5GVUVadC1oUjhtblZQZnBNREdzdXk2Q05zQlg1alV0TzY3cm9SZ1NxejBGWG9EbmVsdWl4QmNkSGxQMmRJSnJSaTk0RWJ6UXNVMlFRd3N2SWZSMkZjdkpRYXNqdWw5elZNM0xKR0k0UGFVODloaEx1T3p6VElVWlHSAacBQVVfeXFMT19aU0FCbmJmemU3T1VUODdKTHcxZHlqOFZkZ0RXMnJHRTNyRDhZN1Jvb0ZNejJBd0o5Um1qamFMRlFLTldnTjFQRzk4dzgzeUNJX3M2NERiWFFrZUZMRXlhRVlCRExGcUtYekcwcmt0UTJDbEk2R3B1cXB5bUYySmlJcXJKNnd3a0VuMHhrWVU0QU1CdnpMeUwteDA0aTdSc092ZWdmWWc?oc=5" target="_blank" rel="noopener noreferrer">食感に沼るぅぅぅ！【モスバーガー】の「新作スイーツ」食べてみた</a></h3>
+    <p class="summary">競合動向として「食感に沼るぅぅぅ！【モスバーガー】の「新作スイーツ」食べてみた」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">KFC</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/31 02:20</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiUkFVX3lxTE9zcVcxSXQxeFhiamxZZVN5WXp2ZWtmSm8zcFBTaFNjY0I1blFBR3A0TlRMYjJJTDZsTjBwSDFEclNfTmY0LXlBaUF6MEFteXFPYlE?oc=5" target="_blank" rel="noopener noreferrer">75歳・モト冬樹、ケンタッキーの定番注文メニュー明かす「いまはこれ一択だね」 初めてKFCのチキンを食べたのは50年前</a></h3>
+    <p class="summary">競合動向として「75歳・モト冬樹、ケンタッキーの定番注文メニュー明かす「いまはこれ一択だね」 初めてKFCのチキンを食べたのは50年前」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">ロッテリア</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/31 01:02</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1LMUNwRVpVbF9HUEhwUTZtX3Mta3d4XzV6RzFzVUtWVktxZmhFSzlBVFBzd0NZWV9xYnFsdDV4Y2Rnc2pNaDBKc0VqVGlub0gxWmdZb2J1NXM0SUthR0NPdm82QkxYNkU?oc=5" target="_blank" rel="noopener noreferrer">＜画像4 / 4＞ロッテリアの「ヱヴァ」キャンペーン、第5弾は“ランチクロス”付き</a></h3>
+    <p class="summary">競合動向として「＜画像4 / 4＞ロッテリアの「ヱヴァ」キャンペーン、第5弾は“ランチクロス”付き」が注目されています。</p>
+    <div class="source">ロッテリア - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+          
+
+          
+          <h2><span class="h2-icon">📚</span>書籍・出版情報</h2>
+          
+            <p class="empty">該当する書籍データはありません。</p>
+          
+
+          <h2><span class="h2-icon">🔗</span>参照URL一覧</h2>
+          <ol class="refs">
+            
+              <li><a href="https://www.youtube.com/watch?v=nmC_qsZvPJY">全然朝だけじゃなかったwww#夫婦の休日 #マック新作 #食事vlog</a> / YouTube - たくりの夫婦</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=xe9gAPY7yq0">Trying The Free Redbull Hack At McDonald's! 🥤 #foodhacks #fails #comedy</a> / YouTube - The Sahu Network</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=tJykM9nXyB0">マックのご当地バーガー食べてみた😄</a> / YouTube - 47歳わたちの新婚生活♡</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=AQ2GOeFB52g">朝マック #ショート動画 #マック新作 #マクドナルド #マクド #ショート#シングルマザー #food</a> / YouTube - ベーグルゆこ</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=ZKFdtrGNw2g">🍔 McDonald's Ka Secret Sales Hack Revealed🔥: #mcdonalds ,#salestips ,#shortsfeed</a> / YouTube - TCM Awaaz</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMibkFVX3lxTFA3ajdrRnpIVWotRUYzM2F3U19jVkVYY3FBbE55Mm96OW9fVXFjS2lIaExWZ2ZXN1NHNUdBTzR4TTQwRG1uWWRuX0JURExaMExlNmNMOGVCTE5pLVR5MEhUcV92aGJEUHpOQVExS1J3?oc=5">画像2 / 6＞ハンバーガーブームをアンケート調査！好きなバーガーチェーン第1位は？他業界からの参入にも注目</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTFB1Y2ZqMHZ6RlhJM3JURzVmaHNZQnZxaVNuVVJ3WXM5U1NYcWdKSnR0SC1yNGlmNG03V0NzOUpnMERGaW9YSldxZjctNm5UMzhNVElHU1NtSXBuRWthNWVhYWRDZ07SAWRBVV95cUxQdWNmajB2ekZYSTNyVEc1ZmhzWUJ2cWlTblVSd1lzOVNTWHFnSkp0dEgtcjRpZjRtN1dDczlKZzBERmlvWEpXcWY3LTZuVDM4TVRJR1NTbUlwbkVrYTVlYWFkQ2dO?oc=5">食感に沼るぅぅぅ！【モスバーガー】の「新作スイーツ」食べてみた | チバテレ＋プラス</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiogFBVV95cUxObWIwSVN6bnYzb1FCU3l5eUNsRlVIS2RybE1RRGtva0ktZW5GVUVadC1oUjhtblZQZnBNREdzdXk2Q05zQlg1alV0TzY3cm9SZ1NxejBGWG9EbmVsdWl4QmNkSGxQMmRJSnJSaTk0RWJ6UXNVMlFRd3N2SWZSMkZjdkpRYXNqdWw5elZNM0xKR0k0UGFVODloaEx1T3p6VElVWlHSAacBQVVfeXFMT19aU0FCbmJmemU3T1VUODdKTHcxZHlqOFZkZ0RXMnJHRTNyRDhZN1Jvb0ZNejJBd0o5Um1qamFMRlFLTldnTjFQRzk4dzgzeUNJX3M2NERiWFFrZUZMRXlhRVlCRExGcUtYekcwcmt0UTJDbEk2R3B1cXB5bUYySmlJcXJKNnd3a0VuMHhrWVU0QU1CdnpMeUwteDA0aTdSc092ZWdmWWc?oc=5">食感に沼るぅぅぅ！【モスバーガー】の「新作スイーツ」食べてみた</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiUkFVX3lxTE9zcVcxSXQxeFhiamxZZVN5WXp2ZWtmSm8zcFBTaFNjY0I1blFBR3A0TlRMYjJJTDZsTjBwSDFEclNfTmY0LXlBaUF6MEFteXFPYlE?oc=5">75歳・モト冬樹、ケンタッキーの定番注文メニュー明かす「いまはこれ一択だね」 初めてKFCのチキンを食べたのは50年前</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1LMUNwRVpVbF9HUEhwUTZtX3Mta3d4XzV6RzFzVUtWVktxZmhFSzlBVFBzd0NZWV9xYnFsdDV4Y2Rnc2pNaDBKc0VqVGlub0gxWmdZb2J1NXM0SUthR0NPdm82QkxYNkU?oc=5">＜画像4 / 4＞ロッテリアの「ヱヴァ」キャンペーン、第5弾は“ランチクロス”付き</a> / ロッテリア - ニュース</li>
+            
+          </ol>
+        </section>
+      
+          
+        <section class="report-panel" data-panel="2026-05-30" data-window="2026/05/30 00:00 - 2026/05/31 00:00">
+          
+          
+            <div class="ai-summary">
+              <div class="ai-summary-label">🤖 AI · 本日のマクドナルドサマリー</div>
+              <p class="ai-summary-text">本日のマクドナルド関連では「マクドナルド「490円の新商品」を飲んだら、個人的に悲しくなった（進撃のグルメ） - エキスパート」が確認されています。YouTubeでは「【マック新作】久しぶりに2人でマクド食べたお昼ご飯」が12,314回再生されています。競合ではバーガーキング「バーガーキング 新作『アルファキング・イエティ ザ・ワンパウンダー』を食べに来た Cloudflare (gNELMjqCBn)」、モスバーガー「【2026年5月発売】チーズケーキ新商品まとめ！チーズガーデン・TOKYOチューリップローズ・KKD・サーティワン・モスバーガー＆カフェの5ブランド」、バーガーキング「マックと対極 バーガーキング社風」、バーガーキング「「軍隊のようなルールは不要」 マックと対極の文化で「46カ月連続成長」したバーガーキングの組織論」などの動きが確認されています。</p>
+            </div>
+          
+          <h2><span class="h2-icon">☀️</span>今日のまとめ</h2>
+          <section class="digest">
+            
+              <div class="digest-item">2026/05/30 18:54時点では、マック関連で「マクドナルド「490円の新商品」を飲んだら、個人的に悲しくなった（進撃のグルメ） - エキスパート」が大きな話題です。商品内容だけでなく、販売状況やSNS反応まで合わせて確認したい流れです。</div>
+            
+              <div class="digest-item">YouTubeでは「【マック新作】久しぶりに2人でマクド食べたお昼ご飯」が12,314回再生されています。サムネイルとタイトルの見せ方は、SNS投稿や店頭訴求の参考になりそうです。</div>
+            
+              <div class="digest-item">競合・隣接業界では「画像9 / 40＞目の前で焼かれるパティに期待度MAX！靱公園の人気ハンバーガー店「イエス！バーガー」」を押さえておきたいです。価格、メニュー戦略、デジタル施策の見せ方をマック企画と比較できます。</div>
+            
+          </section>
+          
+          
+            
+            <h2><span class="h2-icon">🎬</span>YouTube注目動画<span class="section-count">6件</span></h2>
+            
+              
+                <section class="cards">
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=hATv_LEZg4Q" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/hATv_LEZg4Q/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/30 07:00 / YouTube - ちびーずROOM</div>
+    <h3 class="title">【マック新作】久しぶりに2人でマクド食べたお昼ご飯</h3>
+    <p class="summary">SNS話題として「【マック新作】久しぶりに2人でマクド食べたお昼ご飯」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 12,314</span>
+      <span class="metric">いいね 204</span>
+      <span class="metric">コメント 26</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及、マックに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=PE98s2whaU4" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/PE98s2whaU4/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/30 00:06 / YouTube - RichardbutNotRich</div>
+    <h3 class="title">Eating a Mcdonald’s On A Rollercoaster! 💀💀 #themepark #mcdonalds #food</h3>
+    <p class="summary">SNS話題として「Eating a Mcdonald’s On A Rollercoaster! 💀💀 #themepark #mcdonalds #food」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 18,016</span>
+      <span class="metric">いいね 177</span>
+      <span class="metric">コメント 49</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=zFEeq8urkl4" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/zFEeq8urkl4/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/30 21:35 / YouTube - にゃんごろだいすき倶楽部</div>
+    <h3 class="title">【爆食】マクドナルド新作【ご当地マック】が衝撃の美味しさで昇天</h3>
+    <p class="summary">SNS話題として「【爆食】マクドナルド新作【ご当地マック】が衝撃の美味しさで昇天」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 498</span>
+      <span class="metric">いいね 54</span>
+      <span class="metric">コメント 30</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及、マックに直接言及、ハンバーガーカテゴリの話題</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=Q1glXO0EvX8" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/Q1glXO0EvX8/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/30 11:57 / YouTube - Lara Rose B</div>
+    <h3 class="title">McDonald’s in Japan Review!! 😋 #youtubeshorts</h3>
+    <p class="summary">SNS話題として「McDonald’s in Japan Review!! 😋 #youtubeshorts」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 1,363</span>
+      <span class="metric">いいね 101</span>
+      <span class="metric">コメント 1</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=l48iMspq8yY" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/l48iMspq8yY/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/30 13:00 / YouTube - タナカリちゃんねる</div>
+    <h3 class="title">【マクド新作】ナゲットの新ソースがチーズとガリトマで両方美味しかった！！</h3>
+    <p class="summary">SNS話題として「【マクド新作】ナゲットの新ソースがチーズとガリトマで両方美味しかった！！」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 1,011</span>
+      <span class="metric">いいね 35</span>
+      <span class="metric">コメント 4</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=icUI6Dyogj4" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/icUI6Dyogj4/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/30 16:51 / YouTube - 百瀬こいろ Koiro Ch.【ぶいじだい】</div>
+    <h3 class="title">マクド派のオレが新作ご当地バーガーを食べる配信【 百瀬こいろ 】</h3>
+    <p class="summary">SNS話題として「マクド派のオレが新作ご当地バーガーを食べる配信【 百瀬こいろ 】」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 159</span>
+      <span class="metric">いいね 24</span>
+      <span class="metric">コメント 1</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及、バーガーカテゴリの話題</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">🍔</span>マクドナルド関連ニュース<span class="section-count">2件</span></h2>
+            
+              
+                
+                <section class="list" data-collapsible="official-2026-05-30">
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/30 18:54</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxQUEI4ME1HUnZJdEI5Z2oxX3lIVGRBdDJnWHN6dVFQTWNGWWtUMGF5NjFKOUVEUmZYSThVQkw0THQ4NGpTYmNJQzZyYnVfTGF5cEswNjBJRHNuVjFnRUNHSzRodGptMUw4bk9QV1FWZlE2T2xjMEFQYlFfOFhWcXNXRC1DSTZqRTJZ?oc=5" target="_blank" rel="noopener noreferrer">マクドナルド「490円の新商品」を飲んだら、個人的に悲しくなった（進撃のグルメ） - エキスパート</a></h3>
+    <p class="summary">マック/公式発表として「マクドナルド「490円の新商品」を飲んだら、個人的に悲しくなった（進撃のグルメ） - エキスパート」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/30 12:06</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiWEFVX3lxTE9zTTVaZWpTbGFGeTdoaXoyYU9rR1dVOXUzX1l3UV9VRkZVVXVwMEFvZ0k4M0FTdl92QXphLVlUNHp2TUNpbDdqVENnMDhJOVNvMUFGUHZ1QVo?oc=5" target="_blank" rel="noopener noreferrer">Spicy Chicken McNuggets 5Pcs</a></h3>
+    <p class="summary">マック/公式発表として「Spicy Chicken McNuggets 5Pcs」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    
+                  
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">📱</span>X / Instagram / TikTokで伸びている話題</h2>
+            
+              <p class="empty">該当データはありません。</p>
+            
+          
+
+          
+          
+          
+          <h2><span class="h2-icon">🏁</span>競合・隣接業界の動き<span class="section-count">5件</span></h2>
+          
+          
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">モスバーガー</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/30 18:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMia0FVX3lxTE45SXM2YmtVN25oN0Y5WjZhUC14VnFSNDZrc0tKc0FGUWpyQWFaemx6VndZMlowSWlEblMwaTd6eFVGNDhjRk8yZUlyWXRwcWxIVHNRQXlaZXJpZWxmYVh4dkJUdk1mSXpoeXhz0gFrQVVfeXFMTjlJczZia1U3bmg3RjlaNmFQLXhWcVI0NmtzS0pzQUZRanJBYVp6bHpWd1kyWjBJaURuUzBpN3p4VUY0OGNGTzJlSXJZdHBxbEhUc1FBeVplcmllbGZhWHh2QlR2TWZJemh5eHM?oc=5" target="_blank" rel="noopener noreferrer">【2026年5月発売】チーズケーキ新商品まとめ！チーズガーデン・TOKYOチューリップローズ・KKD・サーティワン・モスバーガー＆カフェの5ブランド</a></h3>
+    <p class="summary">競合動向として「【2026年5月発売】チーズケーキ新商品まとめ！チーズガーデン・TOKYOチューリップローズ・KKD・サーティワン・モスバーガー＆カフェの5ブランド」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">バーガーキング</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/30 21:13</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE9ibE5HYUlMWjUwLVdOTGV6Zkh6ejE2eXMxemR3UHAxY1o3ZnV5OEQ0U1BaeW40WUZydjJlcGlEa2p6NjZqY2FHaTNETzRCZGFXZ1dVemNEUDFMdjA?oc=5" target="_blank" rel="noopener noreferrer">バーガーキング 新作『アルファキング・イエティ ザ・ワンパウンダー』を食べに来た Cloudflare (gNELMjqCBn)</a></h3>
+    <p class="summary">競合動向として「バーガーキング 新作『アルファキング・イエティ ザ・ワンパウンダー』を食べに来た Cloudflare (gNELMjqCBn)」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/30 15:19</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiUEFVX3lxTE1qbW5xWVItY2E4am53X2RCUUJabnJpdmxYYnU5SjU4UGJWd3E1Mjh1dTZONFEyWXhhSWhVdTk3emhSNnNpQ1dvRldUVnlfdWFG?oc=5" target="_blank" rel="noopener noreferrer">マックと対極 バーガーキング社風</a></h3>
+    <p class="summary">競合動向として「マックと対極 バーガーキング社風」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/30 13:10</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTE5iY0tXbFY3TmxON3JYZ1BjYzFzUmlxbkt6bkRvemhkOGhTemlJaWhWSHlBVHdfNTBYMzBWQ0NTdnR4cDEtUDlCM3VpdEwxajg0X29UZm12REUzcThiT1FsTEllOHhpYnJMazkxNTZ1QjBWTW1fRDBWU01ZWU9iQjQ?oc=5" target="_blank" rel="noopener noreferrer">「軍隊のようなルールは不要」 マックと対極の文化で「46カ月連続成長」したバーガーキングの組織論</a></h3>
+    <p class="summary">競合動向として「「軍隊のようなルールは不要」 マックと対極の文化で「46カ月連続成長」したバーガーキングの組織論」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/30 10:14</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE4xMmh5TzcwQUlKSHpNc240U0pVQldQUnM3M1pXREJqVUhFNDlfOTN2VU9tb0ZJVV90ZlBFNkVaZTJkbTNQMU03QWVUX2ZjaE5qX09rNDhlYXJmZm5uOU9STnNLU2UzVndw?oc=5" target="_blank" rel="noopener noreferrer">＜画像1 / 4＞バーガーキングが暑さに効くアボカドメニューを強化！</a></h3>
+    <p class="summary">競合動向として「＜画像1 / 4＞バーガーキングが暑さに効くアボカドメニューを強化！」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+          
+
+          
+          <h2><span class="h2-icon">📚</span>書籍・出版情報</h2>
+          
+            <p class="empty">該当する書籍データはありません。</p>
+          
+
+          <h2><span class="h2-icon">🔗</span>参照URL一覧</h2>
+          <ol class="refs">
+            
+              <li><a href="https://www.youtube.com/watch?v=hATv_LEZg4Q">【マック新作】久しぶりに2人でマクド食べたお昼ご飯</a> / YouTube - ちびーずROOM</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=PE98s2whaU4">Eating a Mcdonald’s On A Rollercoaster! 💀💀 #themepark #mcdonalds #food</a> / YouTube - RichardbutNotRich</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=zFEeq8urkl4">【爆食】マクドナルド新作【ご当地マック】が衝撃の美味しさで昇天</a> / YouTube - にゃんごろだいすき倶楽部</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=Q1glXO0EvX8">McDonald’s in Japan Review!! 😋 #youtubeshorts</a> / YouTube - Lara Rose B</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=l48iMspq8yY">【マクド新作】ナゲットの新ソースがチーズとガリトマで両方美味しかった！！</a> / YouTube - タナカリちゃんねる</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=icUI6Dyogj4">マクド派のオレが新作ご当地バーガーを食べる配信【 百瀬こいろ 】</a> / YouTube - 百瀬こいろ Koiro Ch.【ぶいじだい】</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=LFvutKZeoVE">【新ソースうま過ぎ】マクドナルド「スパイシーチキンマックナゲット、ペッパーチーズソース、ホットチリガーリックソース」</a> / YouTube - やっぴー ちゃんねる</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=PCfSrYXe-Gg">新作スパイシーナゲットソース好き？？ #マック #スパイシーナゲット</a> / YouTube - vdyli</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=Yno2OthMKUg">McDonald's Ramyeon McShaker with Burger King New Fries Review Canada </a> / YouTube - Mr Branson's World</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxQUEI4ME1HUnZJdEI5Z2oxX3lIVGRBdDJnWHN6dVFQTWNGWWtUMGF5NjFKOUVEUmZYSThVQkw0THQ4NGpTYmNJQzZyYnVfTGF5cEswNjBJRHNuVjFnRUNHSzRodGptMUw4bk9QV1FWZlE2T2xjMEFQYlFfOFhWcXNXRC1DSTZqRTJZ?oc=5">マクドナルド「490円の新商品」を飲んだら、個人的に悲しくなった（進撃のグルメ） - エキスパート</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiWEFVX3lxTE9zTTVaZWpTbGFGeTdoaXoyYU9rR1dVOXUzX1l3UV9VRkZVVXVwMEFvZ0k4M0FTdl92QXphLVlUNHp2TUNpbDdqVENnMDhJOVNvMUFGUHZ1QVo?oc=5">Spicy Chicken McNuggets 5Pcs</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMie0FVX3lxTE1La2JfVkNaTnd1bmRLLUZvQzlnRE8tSl9CYzZYOE0wSzY5WlhlR0RYbjgzeEdxb2pSbS1wWWRSVEgzY1UtRFVodFprVzVQaG5YVGxCQ2JVY29hdzlMYUJBaXVtOThSQk1qUkstVldWd1NKekQ3MnVSWnY3Yw?oc=5">画像9 / 40＞目の前で焼かれるパティに期待度MAX！靱公園の人気ハンバーガー店「イエス！バーガー」</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE9ibE5HYUlMWjUwLVdOTGV6Zkh6ejE2eXMxemR3UHAxY1o3ZnV5OEQ0U1BaeW40WUZydjJlcGlEa2p6NjZqY2FHaTNETzRCZGFXZ1dVemNEUDFMdjA?oc=5">バーガーキング 新作『アルファキング・イエティ ザ・ワンパウンダー』を食べに来た Cloudflare (gNELMjqCBn)</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMia0FVX3lxTE45SXM2YmtVN25oN0Y5WjZhUC14VnFSNDZrc0tKc0FGUWpyQWFaemx6VndZMlowSWlEblMwaTd6eFVGNDhjRk8yZUlyWXRwcWxIVHNRQXlaZXJpZWxmYVh4dkJUdk1mSXpoeXhz0gFrQVVfeXFMTjlJczZia1U3bmg3RjlaNmFQLXhWcVI0NmtzS0pzQUZRanJBYVp6bHpWd1kyWjBJaURuUzBpN3p4VUY0OGNGTzJlSXJZdHBxbEhUc1FBeVplcmllbGZhWHh2QlR2TWZJemh5eHM?oc=5">【2026年5月発売】チーズケーキ新商品まとめ！チーズガーデン・TOKYOチューリップローズ・KKD・サーティワン・モスバーガー＆カフェの5ブランド</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiUEFVX3lxTE1qbW5xWVItY2E4am53X2RCUUJabnJpdmxYYnU5SjU4UGJWd3E1Mjh1dTZONFEyWXhhSWhVdTk3emhSNnNpQ1dvRldUVnlfdWFG?oc=5">マックと対極 バーガーキング社風</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE5iY0tXbFY3TmxON3JYZ1BjYzFzUmlxbkt6bkRvemhkOGhTemlJaWhWSHlBVHdfNTBYMzBWQ0NTdnR4cDEtUDlCM3VpdEwxajg0X29UZm12REUzcThiT1FsTEllOHhpYnJMazkxNTZ1QjBWTW1fRDBWU01ZWU9iQjQ?oc=5">「軍隊のようなルールは不要」 マックと対極の文化で「46カ月連続成長」したバーガーキングの組織論</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTE4xMmh5TzcwQUlKSHpNc240U0pVQldQUnM3M1pXREJqVUhFNDlfOTN2VU9tb0ZJVV90ZlBFNkVaZTJkbTNQMU03QWVUX2ZjaE5qX09rNDhlYXJmZm5uOU9STnNLU2UzVndw?oc=5">＜画像1 / 4＞バーガーキングが暑さに効くアボカドメニューを強化！</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxNcGVpZE4waUR5dDRFaHNkV3NDT1BrdVpZYzVTU0IzOVNsU2FqZ2RZeXVSQldKXzF3MExUNlNNdUlLRFJ2aHdZb1B5TDBKVnpKd2JlR2otZDZsV2dNYUl2UFNNLUE3NjEtWC1tdk9qT0loTVNNeUk0Vjh3Z0Y5Z3IteVh1bUp2NTI2?oc=5">バーガーキングで「650円セット」を食べた正直な感想 お得な「ビッグドリンク」へ変更（進撃のグルメ） - エキスパート</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=K9L7E4KMSGM">マック新作「ご当地マック」を食べる</a> / YouTube - たぴおかチャンネル</li>
+            
+          </ol>
+        </section>
+      
+          
+        <section class="report-panel" data-panel="2026-05-29" data-window="2026/05/29 00:00 - 2026/05/30 00:00">
+          
+          
+            <div class="ai-summary">
+              <div class="ai-summary-label">🤖 AI · 本日のマクドナルドサマリー</div>
+              <p class="ai-summary-text">本日のマクドナルド関連では「マクドナルド新作「ご当地マック」はどれが美味しい？話題の3種を実食！【2026年最新】」が確認されています。YouTubeでは「マックを片手で食べるライフハック、実は自衛隊が起源だった…！？」が90,926回再生されています。競合ではモスバーガー「モスバーガー海老バーガー2種が5月20日発売|アボカド海老カツとエビフライ（おとなの週末）」、モスバーガー「画像2 / 9＞あの“竜田バーガー”が新作を引き連れて復活！モスバーガーの2種の「竜田バーガー」を食べてきた」、ロッテリア「＜画像3 / 5＞「リラックマ福袋」がロッテリアから発売！実用性抜群のランチグッズ4点入り」、ロッテリア「＜画像1 / 4＞ロッテリア「野菜ハンバーガー」に期間限定の新作発売」などの動きが確認されています。</p>
+            </div>
+          
+          <h2><span class="h2-icon">☀️</span>今日のまとめ</h2>
+          <section class="digest">
+            
+              <div class="digest-item">2026/05/29 06:02時点では、マック関連で「マクドナルド新作「ご当地マック」はどれが美味しい？話題の3種を実食！【2026年最新】」が大きな話題です。商品内容だけでなく、販売状況やSNS反応まで合わせて確認したい流れです。</div>
+            
+              <div class="digest-item">YouTubeでは「マックを片手で食べるライフハック、実は自衛隊が起源だった…！？」が90,926回再生されています。サムネイルとタイトルの見せ方は、SNS投稿や店頭訴求の参考になりそうです。</div>
+            
+              <div class="digest-item">競合・隣接業界では「【バーガーキング®新作】これは反則！1600カロリー超えの「スモークハウス ザ・ワンパウンダー」実食レポ｜るるぶ&more.」を押さえておきたいです。価格、メニュー戦略、デジタル施策の見せ方をマック企画と比較できます。</div>
+            
+          </section>
+          
+          
+            
+            <h2><span class="h2-icon">🎬</span>YouTube注目動画<span class="section-count">6件</span></h2>
+            
+              
+                <section class="cards">
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=7CClBVt3Jlg" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/7CClBVt3Jlg/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/29 18:00 / YouTube - ちっぴぃちゃんズの自衛隊チャンネル</div>
+    <h3 class="title">マックを片手で食べるライフハック、実は自衛隊が起源だった…！？</h3>
+    <p class="summary">SNS話題として「マックを片手で食べるライフハック、実は自衛隊が起源だった…！？」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 90,926</span>
+      <span class="metric">いいね 1,057</span>
+      <span class="metric">コメント 29</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">マックに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=U04JrEMJt0M" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/U04JrEMJt0M/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/29 01:43 / YouTube - edmundtanfilms</div>
+    <h3 class="title">We Tried All The NEW McDonald's Flavors!</h3>
+    <p class="summary">SNS話題として「We Tried All The NEW McDonald's Flavors!」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 1,376</span>
+      <span class="metric">いいね 63</span>
+      <span class="metric">コメント 4</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=7Q_xK_hZMy8" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/7Q_xK_hZMy8/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/29 21:00 / YouTube - Gui De Freitas</div>
+    <h3 class="title">Hack secreto McDonald’s #mcdonalds #shorts #shortsfeed</h3>
+    <p class="summary">SNS話題として「Hack secreto McDonald’s #mcdonalds #shorts #shortsfeed」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 2,806</span>
+      <span class="metric">いいね 59</span>
+      <span class="metric">コメント 0</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=U24ApjUMXV4" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/U24ApjUMXV4/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/29 18:33 / YouTube - しの♡爆食い沖縄女</div>
+    <h3 class="title">【マック新作🍔】ご当地マックを爆食い。 #モッパン</h3>
+    <p class="summary">SNS話題として「【マック新作🍔】ご当地マックを爆食い。 #モッパン」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 2,492</span>
+      <span class="metric">いいね 36</span>
+      <span class="metric">コメント 4</span>
+      
+    </div>
+    <p class="reason">マックに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=M-hHQmjFgI4" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/M-hHQmjFgI4/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/29 18:53 / YouTube - Phunken Hungry </div>
+    <h3 class="title">Mcdonalds World Menu Heist Benny Bagel 🥯 </h3>
+    <p class="summary">SNS話題として「Mcdonalds World Menu Heist Benny Bagel 🥯 」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 163</span>
+      <span class="metric">いいね 14</span>
+      <span class="metric">コメント 19</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=ufM3RHI_o9U" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/ufM3RHI_o9U/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/29 16:00 / YouTube - Mike's Man Cave</div>
+    <h3 class="title">McDonald’s NEW Canadian Bagel Review 🇨🇦 - McDonald's Australia Breakfast Item - Limited Edition</h3>
+    <p class="summary">SNS話題として「McDonald’s NEW Canadian Bagel Review 🇨🇦 - McDonald's Australia Breakfast Item - Limited Edition」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 345</span>
+      <span class="metric">いいね 21</span>
+      <span class="metric">コメント 15</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">🍔</span>マクドナルド関連ニュース<span class="section-count">4件</span></h2>
+            
+              
+                
+                <section class="list collapsible" data-collapsible="official-2026-05-29">
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/29 06:02</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiREFVX3lxTFA4bV9QRWJxSmk0eVBFeGZQUVZtMjFBYWZ3Z1hLaklkY1FlNkZMNUZraGg3S25BUDFZcUFleENXdHJnTlJ3?oc=5" target="_blank" rel="noopener noreferrer">マクドナルド新作「ご当地マック」はどれが美味しい？話題の3種を実食！【2026年最新】</a></h3>
+    <p class="summary">マック/公式発表として「マクドナルド新作「ご当地マック」はどれが美味しい？話題の3種を実食！【2026年最新】」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/29 21:01</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxQOThaVm16T3JicllNaTlzUjh3eS1WX1hEZ3h4TTNOeWY2czFIWFBHSlRIdVFUUXhzbkF2Ym8tY2RYZ2dqSWlESVZ6R3NQMlhIaXlxUHlKNE5yX21QeHU0ZURMcnBaNFBkeGJjNWlZZ3pZWTY5Wm40X0J1VVI1bGFRVzRfeVExSC1z?oc=5" target="_blank" rel="noopener noreferrer">【マック新作】「北海道じゃがチーズてりやき」を食べてみた正直な感想（グルメバカごろり） - エキスパート</a></h3>
+    <p class="summary">マック/公式発表として「【マック新作】「北海道じゃがチーズてりやき」を食べてみた正直な感想（グルメバカごろり） - エキスパート」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/29 18:28</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE4xekJUUzB3blE3SnVKZjVKQjdHVl9qTDB5bU1oc0NwdHVXbXpQejhJd1AxOUNJWUkwVEZpVV9BNU94SUJtWE1LNWVITTdWVkdNb2ZmYm8xaG5neHg2TTJ1T3ln?oc=5" target="_blank" rel="noopener noreferrer">5月29日(金)発売のハッピーセット®「ちいかわ」第2弾の販売方法について</a></h3>
+    <p class="summary">マック/公式発表として「5月29日(金)発売のハッピーセット®「ちいかわ」第2弾の販売方法について」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/29 07:26</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxOZVp1ZWJDcnNBb1l1RVp2ZTBXVmxTVmhkUjFDMTlwSWZaMjlnZm5SS0xQY3F5Z0tyWHpZaXlSMm9GT1IzX21PWWxSOVJuNDFEYzVxRy0tclR5ejRYTGZoT01ENmtfTmxfS3JwUkp2UUpjOG1UV2tGdlNDNmZuTnk2b2hRdTFrVDZT?oc=5" target="_blank" rel="noopener noreferrer">マック新作「博多明太バターてりやき」を食べてみた感想（グルメバカごろり） - エキスパート</a></h3>
+    <p class="summary">マック/公式発表として「マック新作「博多明太バターてりやき」を食べてみた感想（グルメバカごろり） - エキスパート」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    </div>
+                  
+                  
+                    <button class="show-more" type="button" data-toggle="official-2026-05-29">さらに表示</button>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">📱</span>X / Instagram / TikTokで伸びている話題</h2>
+            
+              <p class="empty">該当データはありません。</p>
+            
+          
+
+          
+          
+          
+          <h2><span class="h2-icon">🏁</span>競合・隣接業界の動き<span class="section-count">4件</span></h2>
+          
+          
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">モスバーガー</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/29 15:30</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTE1XQmxqOVlWMHhiQmlha3h0RVlEMGlQakFRVnIycGdXX3U1QlNYRnp3ZTBFTDROQ1Q2enFCSFQxY2EtN1ExTGZ3YVAyYnRHRTdVSm9ZVmlaYjJjWkJiRlJaRWRSU3BLcDMxZzk4QVI0Z3pWdmJ0Z0otVi0xN1lnYnM?oc=5" target="_blank" rel="noopener noreferrer">モスバーガー海老バーガー2種が5月20日発売|アボカド海老カツとエビフライ（おとなの週末）</a></h3>
+    <p class="summary">競合動向として「モスバーガー海老バーガー2種が5月20日発売|アボカド海老カツとエビフライ（おとなの週末）」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/29 09:51</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMibkFVX3lxTE40NlpkX29FcHQ3cTI4ZVNzcTdsNW53T0R2eUNBSEUxaEhmSjI5OXVEcVZQbWNpOXNHR242Qml4RVJLa09YZkE0OXA4Q1ZzTm9TdWdvQWgxejZQVDhtTkNGMG54QnJucUs0a2R4d1JB?oc=5" target="_blank" rel="noopener noreferrer">画像2 / 9＞あの“竜田バーガー”が新作を引き連れて復活！モスバーガーの2種の「竜田バーガー」を食べてきた</a></h3>
+    <p class="summary">競合動向として「画像2 / 9＞あの“竜田バーガー”が新作を引き連れて復活！モスバーガーの2種の「竜田バーガー」を食べてきた」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">ロッテリア</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/29 05:02</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMifEFVX3lxTE9pQmpDM2VUY3Q5NWozMDQ1dWhBdGVWTGUxR0c2djZZVzJ1c1JnSFRSeHE2TmlRX1pfb1RFc1I1aGQ2bjFJNlhkQnBtUnFGdFprajBGZFN1SkV4clMzU1ROOXpTemx3dVI5YUtCUzFiQWpRMzdhZzlnUWJSb0c?oc=5" target="_blank" rel="noopener noreferrer">＜画像3 / 5＞「リラックマ福袋」がロッテリアから発売！実用性抜群のランチグッズ4点入り</a></h3>
+    <p class="summary">競合動向として「＜画像3 / 5＞「リラックマ福袋」がロッテリアから発売！実用性抜群のランチグッズ4点入り」が注目されています。</p>
+    <div class="source">ロッテリア - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/29 00:21</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiaEFVX3lxTFBPMmhFd3Y2Qkk5dzk4SVFIRUcyOGdHUWIycU5IaS1fR3dZV2FaNHIyelBKcG9WbDJ1RjRISFlFUHg1V1BDcGR0S1NETnB2T09sUGJwZUxzOWg2S09OUm04LVdsazBpWXRh?oc=5" target="_blank" rel="noopener noreferrer">＜画像1 / 4＞ロッテリア「野菜ハンバーガー」に期間限定の新作発売</a></h3>
+    <p class="summary">競合動向として「＜画像1 / 4＞ロッテリア「野菜ハンバーガー」に期間限定の新作発売」が注目されています。</p>
+    <div class="source">ロッテリア - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+          
+
+          
+          <h2><span class="h2-icon">📚</span>書籍・出版情報</h2>
+          
+            <p class="empty">該当する書籍データはありません。</p>
+          
+
+          <h2><span class="h2-icon">🔗</span>参照URL一覧</h2>
+          <ol class="refs">
+            
+              <li><a href="https://www.youtube.com/watch?v=7CClBVt3Jlg">マックを片手で食べるライフハック、実は自衛隊が起源だった…！？</a> / YouTube - ちっぴぃちゃんズの自衛隊チャンネル</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=U04JrEMJt0M">We Tried All The NEW McDonald's Flavors!</a> / YouTube - edmundtanfilms</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=7Q_xK_hZMy8">Hack secreto McDonald’s #mcdonalds #shorts #shortsfeed</a> / YouTube - Gui De Freitas</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=U24ApjUMXV4">【マック新作🍔】ご当地マックを爆食い。 #モッパン</a> / YouTube - しの♡爆食い沖縄女</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=M-hHQmjFgI4">Mcdonalds World Menu Heist Benny Bagel 🥯 </a> / YouTube - Phunken Hungry </li>
+            
+              <li><a href="https://www.youtube.com/watch?v=ufM3RHI_o9U">McDonald’s NEW Canadian Bagel Review 🇨🇦 - McDonald's Australia Breakfast Item - Limited Edition</a> / YouTube - Mike's Man Cave</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=__NEYw9Yj60">スパイシーチキンマックナゲット🍗</a> / YouTube - 夫婦グルメ😋週末のオススメ💫</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=Hp-80QEXC7U">【マクドナルド×ちいかわ】限定おもちゃが可愛いすぎた🍔🍟💞</a> / YouTube - Yukinoko</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=0lhImIQDOFw">マックの新作全種類食らってみた！#モッパン #大食い #マクドナルド</a> / YouTube - しんしんの食卓</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=-hRHloPx9o4">生活習慣悪過ぎてオールした日じゃないと朝マック食べられへん23歳フリーター</a> / YouTube - 爆食山本遼真!?</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=Cew3UtLz5yU">マックの新作が中々良さそうだな〜と思いながら気になるものを食したけど、久しぶりにいろんな意味でアツくなった件について、#飯テロ #mukbangs #asmr #マクドナルド#fyp</a> / YouTube - kentadesu</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=lLZtoz5-zKU">マクドナルドで、ビッグマックセットを食べてみた</a> / YouTube - 月白琴音</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=Mhl-rk4FtCM">冷めたマックポテトを水で蘇生する神動画！のはずが、、</a> / YouTube - りおのゆるごはん日記。</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiREFVX3lxTFA4bV9QRWJxSmk0eVBFeGZQUVZtMjFBYWZ3Z1hLaklkY1FlNkZMNUZraGg3S25BUDFZcUFleENXdHJnTlJ3?oc=5">マクドナルド新作「ご当地マック」はどれが美味しい？話題の3種を実食！【2026年最新】</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxQOThaVm16T3JicllNaTlzUjh3eS1WX1hEZ3h4TTNOeWY2czFIWFBHSlRIdVFUUXhzbkF2Ym8tY2RYZ2dqSWlESVZ6R3NQMlhIaXlxUHlKNE5yX21QeHU0ZURMcnBaNFBkeGJjNWlZZ3pZWTY5Wm40X0J1VVI1bGFRVzRfeVExSC1z?oc=5">【マック新作】「北海道じゃがチーズてりやき」を食べてみた正直な感想（グルメバカごろり） - エキスパート</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE4xekJUUzB3blE3SnVKZjVKQjdHVl9qTDB5bU1oc0NwdHVXbXpQejhJd1AxOUNJWUkwVEZpVV9BNU94SUJtWE1LNWVITTdWVkdNb2ZmYm8xaG5neHg2TTJ1T3ln?oc=5">5月29日(金)発売のハッピーセット®「ちいかわ」第2弾の販売方法について</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxOZVp1ZWJDcnNBb1l1RVp2ZTBXVmxTVmhkUjFDMTlwSWZaMjlnZm5SS0xQY3F5Z0tyWHpZaXlSMm9GT1IzX21PWWxSOVJuNDFEYzVxRy0tclR5ejRYTGZoT01ENmtfTmxfS3JwUkp2UUpjOG1UV2tGdlNDNmZuTnk2b2hRdTFrVDZT?oc=5">マック新作「博多明太バターてりやき」を食べてみた感想（グルメバカごろり） - エキスパート</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiUEFVX3lxTFBGSHFsVm5FZElzbDdjZW10OXlaMlM1TWpRRmFOUm1BN3NHeE1CZjhoN0t3OUczTmdRcGJrNGQzVnVSM1Z4VjhnbVRScWx0Qnkt?oc=5">【バーガーキング®新作】これは反則！1600カロリー超えの「スモークハウス ザ・ワンパウンダー」実食レポ｜るるぶ&more.</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTFBIbFhMMFU3SzVHM0dKYXZYeFlIaU9BTVhObWxjVC1MVWh2UzJORnhpUHU1OHRjaG1QUGdNWTVRb0s1Qjk5UHp2R2h3ZEM5S3lfUlZTMEo5MUtfbkRLWDJBMXFCSURXME5LZ19iWkNFbGdyVjVTbXY1Ymw1em9LU2s?oc=5">田沢湖畔にハンバーガー店「gatagata」 米国育ちの店主が開業（みんなの経済新聞ネットワーク）</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE1XQmxqOVlWMHhiQmlha3h0RVlEMGlQakFRVnIycGdXX3U1QlNYRnp3ZTBFTDROQ1Q2enFCSFQxY2EtN1ExTGZ3YVAyYnRHRTdVSm9ZVmlaYjJjWkJiRlJaRWRSU3BLcDMxZzk4QVI0Z3pWdmJ0Z0otVi0xN1lnYnM?oc=5">モスバーガー海老バーガー2種が5月20日発売|アボカド海老カツとエビフライ（おとなの週末）</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMibkFVX3lxTE40NlpkX29FcHQ3cTI4ZVNzcTdsNW53T0R2eUNBSEUxaEhmSjI5OXVEcVZQbWNpOXNHR242Qml4RVJLa09YZkE0OXA4Q1ZzTm9TdWdvQWgxejZQVDhtTkNGMG54QnJucUs0a2R4d1JB?oc=5">画像2 / 9＞あの“竜田バーガー”が新作を引き連れて復活！モスバーガーの2種の「竜田バーガー」を食べてきた</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMifEFVX3lxTE9pQmpDM2VUY3Q5NWozMDQ1dWhBdGVWTGUxR0c2djZZVzJ1c1JnSFRSeHE2TmlRX1pfb1RFc1I1aGQ2bjFJNlhkQnBtUnFGdFprajBGZFN1SkV4clMzU1ROOXpTemx3dVI5YUtCUzFiQWpRMzdhZzlnUWJSb0c?oc=5">＜画像3 / 5＞「リラックマ福袋」がロッテリアから発売！実用性抜群のランチグッズ4点入り</a> / ロッテリア - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTFBPMmhFd3Y2Qkk5dzk4SVFIRUcyOGdHUWIycU5IaS1fR3dZV2FaNHIyelBKcG9WbDJ1RjRISFlFUHg1V1BDcGR0S1NETnB2T09sUGJwZUxzOWg2S09OUm04LVdsazBpWXRh?oc=5">＜画像1 / 4＞ロッテリア「野菜ハンバーガー」に期間限定の新作発売</a> / ロッテリア - ニュース</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=3Ihc83TqiXI">マックのご当地マック食べてみた</a> / YouTube - ANGELO Gaming Room</li>
+            
+          </ol>
+        </section>
+      
+          
+        <section class="report-panel" data-panel="2026-05-28" data-window="2026/05/28 00:00 - 2026/05/29 00:00">
+          
+          
+            <div class="ai-summary">
+              <div class="ai-summary-label">🤖 AI · 本日のマクドナルドサマリー</div>
+              <p class="ai-summary-text">本日のマクドナルド関連では「【2026年5月版】マクドナルドおすすめ新メニューはどれが美味しい？期間限定からお得なキャンペーンまで」が確認されています。YouTubeでは「【雑談】オーストラリアのマックにテリヤキバーガーがきたので食べてみる【にじさんじ/矢車りね】」が15,554回再生されています。競合ではモスバーガー「「秒で飲み切った」モスバーガーの“新作ドリンク”が64万表示の反響 SNS「めっちゃおいしい」「量もたっぷりで最高」」、KFC「「なにこれヤバい」KFC新作バーガー ⇒ バンズかと思ったら…“アメリカンすぎる姿”にざわつき「濃厚で絶対うまい」」、ロッテリア「＜画像1 / 3＞ロッテリアがヱヴァンゲリヲンキャンペーンの第3弾『ヱヴァバガチキBOX』発売！」、バーガーキング「バーガーキング、新作は1615キロカロリー＆総重量545グラム“超大型” 『スモークハウス ザ・ワンパウンダー』登場（オリコン）」などの動きが確認されています。</p>
+            </div>
+          
+          <h2><span class="h2-icon">☀️</span>今日のまとめ</h2>
+          <section class="digest">
+            
+              <div class="digest-item">2026/05/28 16:00時点では、マック関連で「【2026年5月版】マクドナルドおすすめ新メニューはどれが美味しい？期間限定からお得なキャンペーンまで」が大きな話題です。商品内容だけでなく、販売状況やSNS反応まで合わせて確認したい流れです。</div>
+            
+              <div class="digest-item">YouTubeでは「【雑談】オーストラリアのマックにテリヤキバーガーがきたので食べてみる【にじさんじ/矢車りね】」が15,554回再生されています。サムネイルとタイトルの見せ方は、SNS投稿や店頭訴求の参考になりそうです。</div>
+            
+              <div class="digest-item">競合・隣接業界では「「秒で飲み切った」モスバーガーの“新作ドリンク”が64万表示の反響 SNS「めっちゃおいしい」「量もたっぷりで最高」」を押さえておきたいです。価格、メニュー戦略、デジタル施策の見せ方をマック企画と比較できます。</div>
+            
+          </section>
+          
+          
+            
+            <h2><span class="h2-icon">🎬</span>YouTube注目動画<span class="section-count">6件</span></h2>
+            
+              
+                <section class="cards">
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=lJsAOjFvbIo" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/lJsAOjFvbIo/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/28 18:52 / YouTube - 矢車りね / Rine Yaguruma【にじさんじ】</div>
+    <h3 class="title">【雑談】オーストラリアのマックにテリヤキバーガーがきたので食べてみる【にじさんじ/矢車りね】</h3>
+    <p class="summary">SNS話題として「【雑談】オーストラリアのマックにテリヤキバーガーがきたので食べてみる【にじさんじ/矢車りね】」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 15,554</span>
+      <span class="metric">いいね 1,145</span>
+      <span class="metric">コメント 8</span>
+      
+    </div>
+    <p class="reason">マックに直接言及、バーガーカテゴリの話題</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=8eU84L_TL5s" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/8eU84L_TL5s/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/28 04:05 / YouTube - UnapologeticallyJae</div>
+    <h3 class="title">Another McDonalds Hack #fyp #foodie #mcdonalds #mukbang #eatwithme #subscribe</h3>
+    <p class="summary">SNS話題として「Another McDonalds Hack #fyp #foodie #mcdonalds #mukbang #eatwithme #subscribe」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 11,011</span>
+      <span class="metric">いいね 877</span>
+      <span class="metric">コメント 53</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=l3LysNSOopk" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/l3LysNSOopk/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/28 22:37 / YouTube - BehindItAll</div>
+    <h3 class="title">Say This at McDonald’s for a Free Meal 🤯</h3>
+    <p class="summary">SNS話題として「Say This at McDonald’s for a Free Meal 🤯」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 19,927</span>
+      <span class="metric">いいね 150</span>
+      <span class="metric">コメント 2</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=a4cwzKIdjJE" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/a4cwzKIdjJE/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/28 22:00 / YouTube - World Vista</div>
+    <h3 class="title">Mcdonalds Fries Life Hack 🤩</h3>
+    <p class="summary">SNS話題として「Mcdonalds Fries Life Hack 🤩」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 15,678</span>
+      <span class="metric">いいね 184</span>
+      <span class="metric">コメント 1</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=EDnFbw5iSpw" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/EDnFbw5iSpw/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/28 20:00 / YouTube - サイクロンマツ</div>
+    <h3 class="title">【マック】サムライマックを初めてレビューした男が再審査！！今のハンバーガーはちゃんと美味しいのか！？</h3>
+    <p class="summary">SNS話題として「【マック】サムライマックを初めてレビューした男が再審査！！今のハンバーガーはちゃんと美味しいのか！？」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 6,053</span>
+      <span class="metric">いいね 67</span>
+      <span class="metric">コメント 16</span>
+      
+    </div>
+    <p class="reason">マックに直接言及、ハンバーガーカテゴリの話題、バーガーカテゴリの話題</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=ethkHzxRb6E" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/ethkHzxRb6E/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/28 03:00 / YouTube - Tajay & Destiny</div>
+    <h3 class="title">We Tried EVERY Viral McDonald’s Summer Drink 🥤😳 Honest Review</h3>
+    <p class="summary">SNS話題として「We Tried EVERY Viral McDonald’s Summer Drink 🥤😳 Honest Review」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 435</span>
+      <span class="metric">いいね 55</span>
+      <span class="metric">コメント 16</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">🍔</span>マクドナルド関連ニュース<span class="section-count">4件</span></h2>
+            
+              
+                
+                <section class="list collapsible" data-collapsible="official-2026-05-28">
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBVa2FteEp6M2FLeXo3WXdpWUpIUEYtTGlFWUo1bUtMaGNkX28tQWtpWmtlWU1KZjBpRkJqNmRYY2gycUE?oc=5" target="_blank" rel="noopener noreferrer">【2026年5月版】マクドナルドおすすめ新メニューはどれが美味しい？期間限定からお得なキャンペーンまで</a></h3>
+    <p class="summary">マック/公式発表として「【2026年5月版】マクドナルドおすすめ新メニューはどれが美味しい？期間限定からお得なキャンペーンまで」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 18:23</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiTkFVX3lxTE1tdkJaV2NOalNVaG9SYjFCNDRFMzNndmpEODRwRXVvei1IN3pfbW9Sczhpa3g1UVdHdHk1V0tnS3pTdUlNQ1k3c1pCTXRMQQ?oc=5" target="_blank" rel="noopener noreferrer">マクドナルド、夏の定番をさらにおいしくするソース期間限定で販売</a></h3>
+    <p class="summary">マック/公式発表として「マクドナルド、夏の定番をさらにおいしくするソース期間限定で販売」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 16:42</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE9JMlNBS3hwcjlpNEhhZlozd0xYQUEta2lhaDFEN1Mzb3d1WnJYYjZ1eVdEajhzS1N1aS1hSFp1X0ZzempYVlViX0E2Q0U4Zk1EeGlhbERqYVd3U0RpdnZZV1Zn?oc=5" target="_blank" rel="noopener noreferrer">全国のマクドナルド店舗(一部店舗を除く)</a></h3>
+    <p class="summary">マック/公式発表として「全国のマクドナルド店舗(一部店舗を除く)」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 14:55</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMikwFBVV95cUxQMFhDc2w0bVI0YzR2emw3eWprMUNYN0VGNkh6cjVnS1ZSTWRMUHpQLTFWQkw3RHFPVmxSRnlaYXF5dzIwLWxmQ1lEZGtJUU9HZGcxcENzdmlRSzhMVGhaTDVtX1FLZGY1ZndXdF9vQzgycDd6Q3FvenJpT3Eyb2pOYXU5N1YxY2Jsd1RwMDY4aEFlN2M?oc=5" target="_blank" rel="noopener noreferrer">お店をさがす | McDonald's</a></h3>
+    <p class="summary">マック/公式発表として「お店をさがす | McDonald's」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    </div>
+                  
+                  
+                    <button class="show-more" type="button" data-toggle="official-2026-05-28">さらに表示</button>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">📱</span>X / Instagram / TikTokで伸びている話題</h2>
+            
+              <p class="empty">該当データはありません。</p>
+            
+          
+
+          
+          
+          
+          <h2><span class="h2-icon">🏁</span>競合・隣接業界の動き<span class="section-count">12件</span></h2>
+          
+          
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">モスバーガー</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 17:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiSkFVX3lxTFBiQzk1N0xwSWw1YTZPZ0hDQU5CbEZSWkRCbGpHeWgxUkdlaFdpMHBiU0dwakVyRGZKV0ROTENadEZkbG53QjEybkp3?oc=5" target="_blank" rel="noopener noreferrer">「秒で飲み切った」モスバーガーの“新作ドリンク”が64万表示の反響 SNS「めっちゃおいしい」「量もたっぷりで最高」</a></h3>
+    <p class="summary">競合動向として「「秒で飲み切った」モスバーガーの“新作ドリンク”が64万表示の反響 SNS「めっちゃおいしい」「量もたっぷりで最高」」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 10:31</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMieEFVX3lxTE5OYkt2NXhLUFRkQTFaa3JkTkp5OWZvVlVfakNyS2kzdldzME1SVGp6bEtwRXdCS3Fjek5hUFloVHlua25mQmE5LWFlVlp6aXFaSGNnaXJ0dDA0U2RJMV9xcEJnanBJN09GUEwzSWVLMHpJclRBazNuTw?oc=5" target="_blank" rel="noopener noreferrer">モスバーガーの「ティーミルク」が「ひっくり返るくらいうまかった」と話題→いつまで販売している？</a></h3>
+    <p class="summary">競合動向として「モスバーガーの「ティーミルク」が「ひっくり返るくらいうまかった」と話題→いつまで販売している？」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 08:16</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiVEFVX3lxTE9jOEw2U0pLaVFITVhaaktzdngtVzRpdXBTajQ0UmM5eDdSWmhHRG03Rnp1em40RUpaaGt0ZHJkNVJXS3czTzBaM3JFWU1oSlFoMXk1b9IBWkFVX3lxTE56bEp0QlhDaWczNnU1dmg1RTl5UnZObDRidHhpaS14OVJ6S3pYaVZRVlpteEFQSEUxeUFFdUpmbkVlMzJXWlJ3WE1STmNsc3FIV01wbWk1d1MzQQ?oc=5" target="_blank" rel="noopener noreferrer">暑い夏にぴったり！モスバーガーからピリ辛ソースの「辛モスキチン」が登場</a></h3>
+    <p class="summary">競合動向として「暑い夏にぴったり！モスバーガーからピリ辛ソースの「辛モスキチン」が登場」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">バーガーキング</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 16:46</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTE9BWnU2Z0JmYlVzTVhtYkhKQVBLZEZrOXVwTlZxd2UyQXQ5WmR1R3VfRVRVbVExWW5ZWVZqQkhkalc2LVlvUi1FMUk3dFkzZWRxX093WnpKeEpXX2ZtcU9WM3JqdGo2Vy02cVJ1b1E2WllESXFPLTZOanFWNG1JaUU?oc=5" target="_blank" rel="noopener noreferrer">バーガーキング、新作は1615キロカロリー＆総重量545グラム“超大型” 『スモークハウス ザ・ワンパウンダー』登場（オリコン）</a></h3>
+    <p class="summary">競合動向として「バーガーキング、新作は1615キロカロリー＆総重量545グラム“超大型” 『スモークハウス ザ・ワンパウンダー』登場（オリコン）」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 15:09</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTE1XeHRjZGFaSHRDQjZzRnBWTVN4ZzF0anpQZGpYMVBISXY3cGJUWDZacm1aaldyY0c4QTViWDZEMjNvb1QyV1pXb0h2Yl9fSlI5NWNrN1hkRUlBSnRyb25PVUxWOGM5dmFqTGUtZmNlNWhMUTh3RElIMG5SSXoxTG8?oc=5" target="_blank" rel="noopener noreferrer">バーガーキング、人気サイドメニューの大容量パック「ビッグバーレル」3種を新発売 / 「ビッグドリンク」も期間限定で復活</a></h3>
+    <p class="summary">競合動向として「バーガーキング、人気サイドメニューの大容量パック「ビッグバーレル」3種を新発売 / 「ビッグドリンク」も期間限定で復活」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 12:28</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTE5VWGZaVXI1Y1BKNmZCS0M5SGhEWTk0c24tTGVrVVFOTkpwTXdTbDA5d1NOSFpSdE84S2Y5OVdwYWNfV01rSzQtQkFyLUk4aXdqUklxcEFPaXAtVFpjbThoR3J0TTNEbWtDRnlOXzJXRmJBcUFsaF9FSS1KeEtVRTA?oc=5" target="_blank" rel="noopener noreferrer">バーガーキング、超大型バーガー「スモークハウス ザ・ワンパウンダー」を5月29日より期間限定発売（GAME Watch）</a></h3>
+    <p class="summary">競合動向として「バーガーキング、超大型バーガー「スモークハウス ザ・ワンパウンダー」を5月29日より期間限定発売（GAME Watch）」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 12:18</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiakFVX3lxTE9hQW1YNlRHY2gyektXX0h6QUlUWGJwT0c0ZWpmNDVvby1MdjBKN244VUt0Ujk5OTV1WGdocHNoRFVLWVZJR3pzVl9TV2F2RUVYUXFpLVdZWmplU1lqdlByY3VGc1ZiTGt5dWc?oc=5" target="_blank" rel="noopener noreferrer">バーガーキング、超大型バーガー「スモークハウス ザ・ワンパウンダー」発売。ビーフ4枚＋チーズ4枚＋特製ソース</a></h3>
+    <p class="summary">競合動向として「バーガーキング、超大型バーガー「スモークハウス ザ・ワンパウンダー」発売。ビーフ4枚＋チーズ4枚＋特製ソース」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">KFC</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 06:30</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTE1TQ2o1enc4OVY5YUJiMUxhZFdWdlViZU80QUlIaXJkOUhVMWJLVkg0c3JLQTRXbExrTWdTSHRZNWwtTEd3TXU5TXJ0WmFlZW5PVlhHaVpuamZya0RmZjBWUDR6aURTN1FSc3gtNkxEbWFSYldOZlFBbEQ5SFhoaGs?oc=5" target="_blank" rel="noopener noreferrer">「なにこれヤバい」KFC新作バーガー ⇒ バンズかと思ったら…“アメリカンすぎる姿”にざわつき「濃厚で絶対うまい」</a></h3>
+    <p class="summary">競合動向として「「なにこれヤバい」KFC新作バーガー ⇒ バンズかと思ったら…“アメリカンすぎる姿”にざわつき「濃厚で絶対うまい」」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 12:03</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiekFVX3lxTFBqNzlBLWxVcFBicWRpOXlqSXZyREtKbnJSNWpiZlBwaVRxR2o4d284YVE0WnB3WHVFUUh3Y0NjcGZ2c1U2aDZITThuR1NZLXNkWjJhRDEzUlE1V2hmelk3cThodndDNVVNYjJkbXgtRWJNWmMwWVhqWU1n0gF_QVVfeXFMTkNGWENPRmxqTURCV1M4Y3ZyREhXVkFlLTVTNjFrSnZXUXpERnc1TVhvci1CVWVaY2ZscUtqNWpmU21ZSjByVUZlMnBvaTFIMTVrU3RxQnR4dDZVTXg0LVdNZWdmSE1OSWFITUJBeFRmZ2NtZF91aEFQUHRNQllnaw?oc=5" target="_blank" rel="noopener noreferrer">【2026年5月28日・6月】ケンタッキー最新情報まとめ！お得とりの日パック＆新作「辛旨ジンガー」＆復活「カーネルクランチポテト」登場！</a></h3>
+    <p class="summary">競合動向として「【2026年5月28日・6月】ケンタッキー最新情報まとめ！お得とりの日パック＆新作「辛旨ジンガー」＆復活「カーネルクランチポテト」登場！」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 10:48</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE9aZzZ2NHVVQnZWTmlQZ3ZFWXcxNGVWM0VnbHI5SFJEZTFWSWVZMWtGZGctbzF6V3pfcmQ1VHZqWThqWlZJQU1ZSWxBNlhZUU9KVlFaQ2djSllqUHRV?oc=5" target="_blank" rel="noopener noreferrer">ケンタッキー×『原神』コラボ第2弾! 限定グッズやゲーム内アイテムが手に入る「原神コラボパック」が期間限定で登場</a></h3>
+    <p class="summary">競合動向として「ケンタッキー×『原神』コラボ第2弾! 限定グッズやゲーム内アイテムが手に入る「原神コラボパック」が期間限定で登場」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 09:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE5aZFNzNjdVMmktY1U0bG1uNU12RWhWc1lYamt3Tkd0dl85VlowMkRfUmZ0SENZWU1oNTk4VXN6Tlp2RmY4N1drZ3piWDVQNFQyVll6WkxGOA?oc=5" target="_blank" rel="noopener noreferrer">揚げ物で揚げ物を挟む……！KFCの“暴力的”新作「ダブルダウンフィレバーガー」は背徳感MAXの一品だった</a></h3>
+    <p class="summary">競合動向として「揚げ物で揚げ物を挟む……！KFCの“暴力的”新作「ダブルダウンフィレバーガー」は背徳感MAXの一品だった」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">ロッテリア</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/28 22:33</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5zejJxM1NDZTVtcXBIcE41WHhtdXoxWGVOYW5PdmJsbXNfV2RwVndnbzBULWZTQ0ZEWGRMb1QzekhQYnFNR0hIUUJmV0pqUUxSRWNNLUF3Rm8wc2czZDZaWk9EeS1mM1E?oc=5" target="_blank" rel="noopener noreferrer">＜画像1 / 3＞ロッテリアがヱヴァンゲリヲンキャンペーンの第3弾『ヱヴァバガチキBOX』発売！</a></h3>
+    <p class="summary">競合動向として「＜画像1 / 3＞ロッテリアがヱヴァンゲリヲンキャンペーンの第3弾『ヱヴァバガチキBOX』発売！」が注目されています。</p>
+    <div class="source">ロッテリア - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+          
+
+          
+          <h2><span class="h2-icon">📚</span>書籍・出版情報</h2>
+          
+            <p class="empty">該当する書籍データはありません。</p>
+          
+
+          <h2><span class="h2-icon">🔗</span>参照URL一覧</h2>
+          <ol class="refs">
+            
+              <li><a href="https://www.youtube.com/watch?v=lJsAOjFvbIo">【雑談】オーストラリアのマックにテリヤキバーガーがきたので食べてみる【にじさんじ/矢車りね】</a> / YouTube - 矢車りね / Rine Yaguruma【にじさんじ】</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=8eU84L_TL5s">Another McDonalds Hack #fyp #foodie #mcdonalds #mukbang #eatwithme #subscribe</a> / YouTube - UnapologeticallyJae</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=l3LysNSOopk">Say This at McDonald’s for a Free Meal 🤯</a> / YouTube - BehindItAll</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=a4cwzKIdjJE">Mcdonalds Fries Life Hack 🤩</a> / YouTube - World Vista</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=EDnFbw5iSpw">【マック】サムライマックを初めてレビューした男が再審査！！今のハンバーガーはちゃんと美味しいのか！？</a> / YouTube - サイクロンマツ</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=ethkHzxRb6E">We Tried EVERY Viral McDonald’s Summer Drink 🥤😳 Honest Review</a> / YouTube - Tajay & Destiny</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=dpYIDkALuAU">【マクドナルド食べ比べ】わたしは食レポ上手です！ご当地マック3種でナンバーワンを決める！【 #もちでんぱ】</a> / YouTube - もちたろ。ch.</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=MWo_oP-80eE">【激ウマ】マクド3種期間バーガーとグランドフライ食べてみた！！</a> / YouTube - りー侍</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=3CfnL7PuTD0">どれが一番気になった？#マクドナルド#マック新作#クーリッシュアレンジ #mukbang</a> / YouTube - ミッキー【30代ハゲの大食い日記】</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=egWsi92GO-8">スパイシーチキンマックナゲット食べてみた #マクドナルド #食べ物 #shorts</a> / YouTube - 恋因ロス KoinRosu</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=VSaj1yNO1qY">Zavala tries McDonald’s in Brazil 🇧🇷🍔🍟🥤 </a> / YouTube - MCKYDS☕️PAGE </li>
+            
+              <li><a href="https://www.youtube.com/watch?v=fVBMQO4m570">【 #初見歓迎 】マクドナルドの新作食べる雑🍔談 【 常連さんいつもありがとう #雑談  #Vtuber】</a> / YouTube - ニゼロくん / Nizero-kun</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=RQYomQUQIgQ">98歳がマックの新作、もものスムージーとマスカットスムージー飲んでみた！98歳ばっちゃチャンネル。秋田。東北。</a> / YouTube - 98歳ばっちゃチャンネル</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=wfGtZS87CKc">【マクドナルド】食べくらべポテナゲ食べてみた</a> / YouTube - からあげ副部長のテイクアウト万歳</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=odBemQ_x3G0">【2ch】初めて「モスバーガー」に挑戦！買って食べてみた感想がこちら…</a> / YouTube - 2ch神グルメスレ</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBVa2FteEp6M2FLeXo3WXdpWUpIUEYtTGlFWUo1bUtMaGNkX28tQWtpWmtlWU1KZjBpRkJqNmRYY2gycUE?oc=5">【2026年5月版】マクドナルドおすすめ新メニューはどれが美味しい？期間限定からお得なキャンペーンまで</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=RKyESfOE-4o">しばいぬがマックのご当地バーガー食べてみた‼</a> / YouTube - どうもしばいぬです。</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiTkFVX3lxTE1tdkJaV2NOalNVaG9SYjFCNDRFMzNndmpEODRwRXVvei1IN3pfbW9Sczhpa3g1UVdHdHk1V0tnS3pTdUlNQ1k3c1pCTXRMQQ?oc=5">マクドナルド、夏の定番をさらにおいしくするソース期間限定で販売</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE9JMlNBS3hwcjlpNEhhZlozd0xYQUEta2lhaDFEN1Mzb3d1WnJYYjZ1eVdEajhzS1N1aS1hSFp1X0ZzempYVlViX0E2Q0U4Zk1EeGlhbERqYVd3U0RpdnZZV1Zn?oc=5">全国のマクドナルド店舗(一部店舗を除く)</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMikwFBVV95cUxQMFhDc2w0bVI0YzR2emw3eWprMUNYN0VGNkh6cjVnS1ZSTWRMUHpQLTFWQkw3RHFPVmxSRnlaYXF5dzIwLWxmQ1lEZGtJUU9HZGcxcENzdmlRSzhMVGhaTDVtX1FLZGY1ZndXdF9vQzgycDd6Q3FvenJpT3Eyb2pOYXU5N1YxY2Jsd1RwMDY4aEFlN2M?oc=5">お店をさがす | McDonald's</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=_SHaU2GRzHA">我が家にマクドナルドをオープンしました | クールなクリエイティブハック</a> / YouTube - Multi DO Shorts Japanese</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=YsB7HTXL5YY">【賛否】復活・改悪・新作…マック今すごいです 【ゆっくり解説】</a> / YouTube - 激ウマ美食ランキング</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiSkFVX3lxTFBiQzk1N0xwSWw1YTZPZ0hDQU5CbEZSWkRCbGpHeWgxUkdlaFdpMHBiU0dwakVyRGZKV0ROTENadEZkbG53QjEybkp3?oc=5">「秒で飲み切った」モスバーガーの“新作ドリンク”が64万表示の反響 SNS「めっちゃおいしい」「量もたっぷりで最高」</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE1TQ2o1enc4OVY5YUJiMUxhZFdWdlViZU80QUlIaXJkOUhVMWJLVkg0c3JLQTRXbExrTWdTSHRZNWwtTEd3TXU5TXJ0WmFlZW5PVlhHaVpuamZya0RmZjBWUDR6aURTN1FSc3gtNkxEbWFSYldOZlFBbEQ5SFhoaGs?oc=5">「なにこれヤバい」KFC新作バーガー ⇒ バンズかと思ったら…“アメリカンすぎる姿”にざわつき「濃厚で絶対うまい」</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiUkFVX3lxTFB3azBwYzktb2tEcGtPOEZ6YTZCd1BTNzRSV19zdEg0cHExaDFzUEN4Uzl5ekVGUnhZUUFYNUtoSDlnSUtfUlY1dTBabmFRVFgxd2c?oc=5">7年ぶり！新潟市にバーガーキングが復活 5〜6月にかけて全国8店舗が続々オープンも！</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTE80SWRNWk9VZUdPN0xHWXpqcXpWb0hWMjZwTFpQWVlfMExrLXo0YlFvdWpRQXRXbWpaOXNHR0NaZ1hVOHZPa0taSVR1bWVZOTFiYVVEUHl30gFbQVVfeXFMUFQ5MXQzVlVpaGFhUV8tbWtYc1p5WUJyRno4dVhDajJuYm1iUFRBZ1JzSG53bTAzSWRFakZUX0wxRUZNSmlIeExaWkhSLUxOam1rV1BhbXNoR3ZBTQ?oc=5">グルメバーガー日本一を決める「バガチャン2025」が開催！横浜赤レンガ倉庫に選りすぐりの21店舗が集結(1/2)</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE03enYwWUpHWnN6YjdEWjIxUzBNWlBfa21NN052ZWk4bTZSa3JhUlhhNEotMUVRakw5ZU9nOWh2TkRBNjJJUXVUN1NaZ3pnVUtoOUNlZUlRRXBqd3lIVUFyTGRnLUVIZ29OQTJ0WVdES0JaT1g1VmwyNHBzUzJ1RG8?oc=5">【モスの本気】はみ出る巨大2尾に悶絶！「贅沢海老フライバーガー」がハンバーガーの枠を超えていた…新作3品をグルメライターが実食（MonoMax Web）</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE9MSTd6NEs4aDdSUXZjUEpsd09YUlRreHpBbkFZSFpkTm5mSzJiMEFmUlBJTXdRWllTOFFINnNaRnk1b1FubTdwYzkwQjVnN0ZSZUJlNjREUjNrUUtnOGVRVW1JWWRTVXFlX3c?oc=5">5月28日（木）は「ハンバーガーの日」！リッチな大人が今選ぶべき、五感を刺激する究極の「和牛薪火バーガー」がnatuRe tokyoに誕生</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5zejJxM1NDZTVtcXBIcE41WHhtdXoxWGVOYW5PdmJsbXNfV2RwVndnbzBULWZTQ0ZEWGRMb1QzekhQYnFNR0hIUUJmV0pqUUxSRWNNLUF3Rm8wc2czZDZaWk9EeS1mM1E?oc=5">＜画像1 / 3＞ロッテリアがヱヴァンゲリヲンキャンペーンの第3弾『ヱヴァバガチキBOX』発売！</a> / ロッテリア - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE9BWnU2Z0JmYlVzTVhtYkhKQVBLZEZrOXVwTlZxd2UyQXQ5WmR1R3VfRVRVbVExWW5ZWVZqQkhkalc2LVlvUi1FMUk3dFkzZWRxX093WnpKeEpXX2ZtcU9WM3JqdGo2Vy02cVJ1b1E2WllESXFPLTZOanFWNG1JaUU?oc=5">バーガーキング、新作は1615キロカロリー＆総重量545グラム“超大型” 『スモークハウス ザ・ワンパウンダー』登場（オリコン）</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE1XeHRjZGFaSHRDQjZzRnBWTVN4ZzF0anpQZGpYMVBISXY3cGJUWDZacm1aaldyY0c4QTViWDZEMjNvb1QyV1pXb0h2Yl9fSlI5NWNrN1hkRUlBSnRyb25PVUxWOGM5dmFqTGUtZmNlNWhMUTh3RElIMG5SSXoxTG8?oc=5">バーガーキング、人気サイドメニューの大容量パック「ビッグバーレル」3種を新発売 / 「ビッグドリンク」も期間限定で復活</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE5VWGZaVXI1Y1BKNmZCS0M5SGhEWTk0c24tTGVrVVFOTkpwTXdTbDA5d1NOSFpSdE84S2Y5OVdwYWNfV01rSzQtQkFyLUk4aXdqUklxcEFPaXAtVFpjbThoR3J0TTNEbWtDRnlOXzJXRmJBcUFsaF9FSS1KeEtVRTA?oc=5">バーガーキング、超大型バーガー「スモークハウス ザ・ワンパウンダー」を5月29日より期間限定発売（GAME Watch）</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE9hQW1YNlRHY2gyektXX0h6QUlUWGJwT0c0ZWpmNDVvby1MdjBKN244VUt0Ujk5OTV1WGdocHNoRFVLWVZJR3pzVl9TV2F2RUVYUXFpLVdZWmplU1lqdlByY3VGc1ZiTGt5dWc?oc=5">バーガーキング、超大型バーガー「スモークハウス ザ・ワンパウンダー」発売。ビーフ4枚＋チーズ4枚＋特製ソース</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiekFVX3lxTFBqNzlBLWxVcFBicWRpOXlqSXZyREtKbnJSNWpiZlBwaVRxR2o4d284YVE0WnB3WHVFUUh3Y0NjcGZ2c1U2aDZITThuR1NZLXNkWjJhRDEzUlE1V2hmelk3cThodndDNVVNYjJkbXgtRWJNWmMwWVhqWU1n0gF_QVVfeXFMTkNGWENPRmxqTURCV1M4Y3ZyREhXVkFlLTVTNjFrSnZXUXpERnc1TVhvci1CVWVaY2ZscUtqNWpmU21ZSjByVUZlMnBvaTFIMTVrU3RxQnR4dDZVTXg0LVdNZWdmSE1OSWFITUJBeFRmZ2NtZF91aEFQUHRNQllnaw?oc=5">【2026年5月28日・6月】ケンタッキー最新情報まとめ！お得とりの日パック＆新作「辛旨ジンガー」＆復活「カーネルクランチポテト」登場！</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE9iQUZOWlE4R001Z3ZyNGM2VmFuckVFNDgzZW1JYUZCcU96OEZDWm54c1RMMUxSOGJZUTJaU3NjR3RVdEx0YnU1cXB4Q1pKZE1TY18zN2JfdWYwTGV5LW5EWG1LWGxESEhkT1E?oc=5">バーガーキング®からスモーキーを極めた4枚肉『スモークハウス ザ・ワンパウンダー』新発売！直火焼きビーフ4枚にスモーキーな刻みベーコン入りの「特製スモークベーコンソース」を使用した超大型バーガー新登場</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE9aZzZ2NHVVQnZWTmlQZ3ZFWXcxNGVWM0VnbHI5SFJEZTFWSWVZMWtGZGctbzF6V3pfcmQ1VHZqWThqWlZJQU1ZSWxBNlhZUU9KVlFaQ2djSllqUHRV?oc=5">ケンタッキー×『原神』コラボ第2弾! 限定グッズやゲーム内アイテムが手に入る「原神コラボパック」が期間限定で登場</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMieEFVX3lxTE5OYkt2NXhLUFRkQTFaa3JkTkp5OWZvVlVfakNyS2kzdldzME1SVGp6bEtwRXdCS3Fjek5hUFloVHlua25mQmE5LWFlVlp6aXFaSGNnaXJ0dDA0U2RJMV9xcEJnanBJN09GUEwzSWVLMHpJclRBazNuTw?oc=5">モスバーガーの「ティーミルク」が「ひっくり返るくらいうまかった」と話題→いつまで販売している？</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE5aZFNzNjdVMmktY1U0bG1uNU12RWhWc1lYamt3Tkd0dl85VlowMkRfUmZ0SENZWU1oNTk4VXN6Tlp2RmY4N1drZ3piWDVQNFQyVll6WkxGOA?oc=5">揚げ物で揚げ物を挟む……！KFCの“暴力的”新作「ダブルダウンフィレバーガー」は背徳感MAXの一品だった</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiVEFVX3lxTE9jOEw2U0pLaVFITVhaaktzdngtVzRpdXBTajQ0UmM5eDdSWmhHRG03Rnp1em40RUpaaGt0ZHJkNVJXS3czTzBaM3JFWU1oSlFoMXk1b9IBWkFVX3lxTE56bEp0QlhDaWczNnU1dmg1RTl5UnZObDRidHhpaS14OVJ6S3pYaVZRVlpteEFQSEUxeUFFdUpmbkVlMzJXWlJ3WE1STmNsc3FIV01wbWk1d1MzQQ?oc=5">暑い夏にぴったり！モスバーガーからピリ辛ソースの「辛モスキチン」が登場</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=N4SsQ5m44rQ">98歳がマックの新作もものスムージーとマスカットスムージーを飲んでみた！98歳ばっちゃチャンネル。秋田。東北。</a> / YouTube - 98歳ばっちゃチャンネル</li>
+            
+          </ol>
+        </section>
+      
+          
+        <section class="report-panel" data-panel="2026-05-27" data-window="2026/05/27 00:00 - 2026/05/28 00:00">
+          
+          
+            <div class="ai-summary">
+              <div class="ai-summary-label">🤖 AI · 本日のマクドナルドサマリー</div>
+              <p class="ai-summary-text">本日のマクドナルド関連では「マクドナルド新メニューまとめ　期間限定、復活メニューはいつから販売？どんな味？マックの今が丸わかり【2026年5月27日更新】」が確認されています。YouTubeでは「【衝撃】全品均一価格！？日本の「鳥貴族」を初めて食べたイギリス人兄弟のリアクションが止まらない！」が11,259回再生されています。競合ではモスバーガー「味も見た目も楽しめる！モスバーガーから食べるシェイクが新登場」、KFC「『原神』×「KFC」コラボ第2弾！アルハイゼンとカーヴェの特別BOX付き「原神コラボパック」2種がKFCネットオーダー限定で販売！アイテムコードの配布や抽選キャンペーンも実施」、モスバーガー「モスバーガーに期間限定フード続々！「白いモスバーガー」や「ホット スパイスモスチキン」も」、KFC「【原神×KFC】コラボ第2弾が6月10日より開催。アルハイゼン＆カーヴェの限定BOXやアニメイトでのグッズ展開も」などの動きが確認されています。</p>
+            </div>
+          
+          <h2><span class="h2-icon">☀️</span>今日のまとめ</h2>
+          <section class="digest">
+            
+              <div class="digest-item">2026/05/27 10:00時点では、マック関連で「マクドナルド新メニューまとめ　期間限定、復活メニューはいつから販売？どんな味？マックの今が丸わかり【2026年5月27日更新】」が大きな話題です。商品内容だけでなく、販売状況やSNS反応まで合わせて確認したい流れです。</div>
+            
+              <div class="digest-item">YouTubeでは「【衝撃】全品均一価格！？日本の「鳥貴族」を初めて食べたイギリス人兄弟のリアクションが止まらない！」が11,259回再生されています。サムネイルとタイトルの見せ方は、SNS投稿や店頭訴求の参考になりそうです。</div>
+            
+              <div class="digest-item">競合・隣接業界では「味も見た目も楽しめる！モスバーガーから食べるシェイクが新登場」を押さえておきたいです。価格、メニュー戦略、デジタル施策の見せ方をマック企画と比較できます。</div>
+            
+          </section>
+          
+          
+            
+            <h2><span class="h2-icon">🎬</span>YouTube注目動画<span class="section-count">6件</span></h2>
+            
+              
+                <section class="cards">
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=harpY9g_xW0" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/harpY9g_xW0/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/27 19:30 / YouTube - マークロッキー Mark Lockey</div>
+    <h3 class="title">【衝撃】全品均一価格！？日本の「鳥貴族」を初めて食べたイギリス人兄弟のリアクションが止まらない！</h3>
+    <p class="summary">SNS話題として「【衝撃】全品均一価格！？日本の「鳥貴族」を初めて食べたイギリス人兄弟のリアクションが止まらない！」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 11,259</span>
+      <span class="metric">いいね 552</span>
+      <span class="metric">コメント 41</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及、マックに直接言及、定番商品ビッグマックに言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=4Wqqg2MEqyU" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/4Wqqg2MEqyU/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/27 06:59 / YouTube - Russ Eats</div>
+    <h3 class="title">Maccas Benny Bagel Review #russeats #mcdonalds #maccas</h3>
+    <p class="summary">SNS話題として「Maccas Benny Bagel Review #russeats #mcdonalds #maccas」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 7,541</span>
+      <span class="metric">いいね 379</span>
+      <span class="metric">コメント 16</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=OmcMoXDEWVg" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/OmcMoXDEWVg/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/27 15:32 / YouTube - ムロタク【食いしん坊】</div>
+    <h3 class="title">5/27〜マクド新作スパイシーナゲット好きなだけ爆食い何個いける？#マクドナルド#新作#スパイシー#ナゲット</h3>
+    <p class="summary">SNS話題として「5/27〜マクド新作スパイシーナゲット好きなだけ爆食い何個いける？#マクドナルド#新作#スパイシー#ナゲット」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 14,719</span>
+      <span class="metric">いいね 195</span>
+      <span class="metric">コメント 11</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=_EfMyCqakxs" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/_EfMyCqakxs/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/27 21:12 / YouTube - Pixel Theory</div>
+    <h3 class="title">The Big Mac Hack McDonald’s Hates 🤯</h3>
+    <p class="summary">SNS話題として「The Big Mac Hack McDonald’s Hates 🤯」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 12,503</span>
+      <span class="metric">いいね 110</span>
+      <span class="metric">コメント 9</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=gq_7LLWH_Tc" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/gq_7LLWH_Tc/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/27 19:03 / YouTube - サラダグルメちゃんねる</div>
+    <h3 class="title">マクドナルド新作スパイシーチキンマックナゲットがまたまたまたまた発売！ #マック #マクド #マクドナルド</h3>
+    <p class="summary">SNS話題として「マクドナルド新作スパイシーチキンマックナゲットがまたまたまたまた発売！ #マック #マクド #マクドナルド」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 3,707</span>
+      <span class="metric">いいね 41</span>
+      <span class="metric">コメント 19</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及、マックに直接言及、チキン系商品の話題</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=dok4cQDNBnY" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/dok4cQDNBnY/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/27 19:06 / YouTube - トレンドグルメ🍭🍓</div>
+    <h3 class="title">5/27新発売のマックのマスカットスムージー！#shorts #マスカットスムージー #mcdonalds #マック新作 #japanesefood #muscat</h3>
+    <p class="summary">SNS話題として「5/27新発売のマックのマスカットスムージー！#shorts #マスカットスムージー #mcdonalds #マック新作 #japanesefood #muscat」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 4,601</span>
+      <span class="metric">いいね 35</span>
+      <span class="metric">コメント 1</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">マックに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">🍔</span>マクドナルド関連ニュース<span class="section-count">7件</span></h2>
+            
+              
+                
+                <section class="list collapsible" data-collapsible="official-2026-05-27">
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 10:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMidEFVX3lxTE8ydm5QdUlObEJTSjlHb1dRU1diUldCeWtmbG9haGZXUGpuYTAwbXFJUVFWOU9McjJkSjlwckotOVFaV0gwTXB4NWd3UWlGMEhtc0xfTjQtRV8xekNQTWFPWFdaMkp6Ml82R0I1THppWmI5ZE1r0gGIAUFVX3lxTFBIeTh5WDE0eHdJZUxRdk9nbGp4QkhQWFo5ZEVpYlJnSVNjbWNDcEhPdnA3UUJTV1NvYUI1c3hoVnpxNER0OXU3OTg4dVN2OENhMElSaXl0TjRURjRLTEg5NzZMc09DX0dOMEx1VDFHRE9kZGpfaEwtaWxlNUVGNnQwTExVdVF5RHI?oc=5" target="_blank" rel="noopener noreferrer">マクドナルド新メニューまとめ　期間限定、復活メニューはいつから販売？どんな味？マックの今が丸わかり【2026年5月27日更新】</a></h3>
+    <p class="summary">マック/公式発表として「マクドナルド新メニューまとめ　期間限定、復活メニューはいつから販売？どんな味？マックの今が丸わかり【2026年5月27日更新】」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 07:02</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxNWUVxX0NweVhOc18xcEZibFZ2eVhfREQzWTBOWmxaQlpXUmFvRFFwRGY1VlIwek5vUWxlZ25hb28zckdGWXJ0U3VQYmhxcjF4c2hQWWZqNVZiTVg1eDdXT0FLVjJNNVlRZ0dyRURxWWdjY0JCcHJSdnZzdlprM1F5YUE2cUd3VGE4?oc=5" target="_blank" rel="noopener noreferrer">マクドナルド「290円の新商品」を食べた正直な感想 人気メニューが1年ぶりに登場（進撃のグルメ） - エキスパート</a></h3>
+    <p class="summary">マック/公式発表として「マクドナルド「290円の新商品」を食べた正直な感想 人気メニューが1年ぶりに登場（進撃のグルメ） - エキスパート」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 07:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiVEFVX3lxTE1NQ0VHdGpha3Q4RG9rVkJhMkxWYzRDS0twQmY0UDRGUTFzLXRJbjdVQlBfSkZEYm0wRU90LVViQzF1T181OVNFZ0xsdlQtZENyTVRsTw?oc=5" target="_blank" rel="noopener noreferrer">【きょうから】「食欲そそる」マックナゲットの夏ソース、新作2種が登場</a></h3>
+    <p class="summary">マック/公式発表として「【きょうから】「食欲そそる」マックナゲットの夏ソース、新作2種が登場」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 06:05</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTFBQNWV4d2R3VmF6MElNY2ZqNzk0elI0T1RWUkMyMWxKLTB1S1JBdVNwTm5rcnZ4WVNIU3YySmdXQVdzS09HblNydWNTX2JjbEpKczY5bmEzTXNoRVFyZGdMamFUR1JzVFBnTWEzbTBEM2pBWlI4OENKMG1wZU1wVDQ?oc=5" target="_blank" rel="noopener noreferrer">【きょうから】マクドナルド、旨辛な「スパイシーチキンマックナゲット」限定販売 2種の新ソースも登場（オリコン）</a></h3>
+    <p class="summary">マック/公式発表として「【きょうから】マクドナルド、旨辛な「スパイシーチキンマックナゲット」限定販売 2種の新ソースも登場（オリコン）」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    </div>
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 05:20</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxQUEdyUlJiUS1rMEdpemt0RmhkQmtUQW11Q1JiaWlSX0xmcm81VGF2N3doQUJKXzZHcmVJanV1djFyZURQNGlsUU9QdWM1ZFA5SHNFMlN3WnhNRGhaY0hWTW8wODFaclc2M0pkWGgzRV96WElhZ25Ydi1qdkI1ZHNqQnptWjhhQTFx?oc=5" target="_blank" rel="noopener noreferrer">マック新作「北海道じゃがチーズてりやきマフィン」を食べてみた感想（グルメバカごろり） - エキスパート</a></h3>
+    <p class="summary">マック/公式発表として「マック新作「北海道じゃがチーズてりやきマフィン」を食べてみた感想（グルメバカごろり） - エキスパート」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    </div>
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 05:02</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE5Kckg3cnI0VGcwMHAyY2E3U0VhdUxJX1B1MWU5V3JLYkJ3dVhySUhMQWxVV3UyU013SGMzdG04SW5FUzZPYUVxMGNDVVF6R2Rib1VaRXVzMA?oc=5" target="_blank" rel="noopener noreferrer">食べくらべポテナゲ大</a></h3>
+    <p class="summary">マック/公式発表として「食べくらべポテナゲ大」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    </div>
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 05:02</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE9ZaFM3dVRHQjNhVkZYUUppMGdDaWVGajZQaXduSnBLNWdrejM3MXdRSlJ3dXFQVWRyRzlLYlFzaXA4azJGS0I3clhtM25VbVFlc0tyRWJINA?oc=5" target="_blank" rel="noopener noreferrer">甘辛セット</a></h3>
+    <p class="summary">マック/公式発表として「甘辛セット」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    </div>
+                  
+                  
+                    <button class="show-more" type="button" data-toggle="official-2026-05-27">さらに表示</button>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">📱</span>X / Instagram / TikTokで伸びている話題</h2>
+            
+              <p class="empty">該当データはありません。</p>
+            
+          
+
+          
+          
+          
+          <h2><span class="h2-icon">🏁</span>競合・隣接業界の動き<span class="section-count">9件</span></h2>
+          
+          
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">モスバーガー</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiVEFVX3lxTE5XMVBCeUNtLUhzUkNKNW84Uk12VEpuWjdtYmpSRTFjRUdCT2ZkQ2VxejNrTU84dURycjdqYWIwYWFkQ1hlTnBtUGh0azRIeTRWTU9RZ9IBWkFVX3lxTE1BMmRJUjRGdlpmallxSm8wQU5ReVlmUGk0NUtLZnltQmFoamp5R25FcmhtUHdBcXk1Sm0ybVl4bHpDSTBURHc1MnpvSXNySHpSWjQzdzdkNXhKUQ?oc=5" target="_blank" rel="noopener noreferrer">味も見た目も楽しめる！モスバーガーから食べるシェイクが新登場</a></h3>
+    <p class="summary">競合動向として「味も見た目も楽しめる！モスバーガーから食べるシェイクが新登場」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiVkFVX3lxTFBtamtUS2lydFlMN2g1bkR6M1NMSmhobkc3bktoczBjQ0FKeElaZWtIT2hlZ0FzdHFiN1RrYS1wc3g0TFdfUkY1VU5renRxa01KWHZicE1R0gFbQVVfeXFMUEt3ZDVJQ0FJU1RFeUE4Nzcxc1NSUE84Q21sVm1xYnZsTUxYSHp0c21NUzhHeTB3aVFmRDlRRnRhaEhIM2NMbjdyaXo1akx2X0RyeEN3ck5xUDJpRQ?oc=5" target="_blank" rel="noopener noreferrer">モスバーガーに期間限定フード続々！「白いモスバーガー」や「ホット スパイスモスチキン」も</a></h3>
+    <p class="summary">競合動向として「モスバーガーに期間限定フード続々！「白いモスバーガー」や「ホット スパイスモスチキン」も」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 05:48</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBEcENFU3ZJM1ItODJSclFYdFJDa2xGWk9Ka0t6RkNZZXdGYVNxRDk4by13WDg5MzJ4QVpOSWtWVTlXMkNDX2xUNXhLMk4zcExMR1VBaHloX2R4UHQyNVJHMWhPaGtPZTg?oc=5" target="_blank" rel="noopener noreferrer">【きょうから】モスバーガー「アボカド海老カツバーガー」新発売 「海老エビフライバーガー」はパワーアップ</a></h3>
+    <p class="summary">競合動向として「【きょうから】モスバーガー「アボカド海老カツバーガー」新発売 「海老エビフライバーガー」はパワーアップ」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 02:06</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiWEFVX3lxTE4yQzBzMTBaSFY3anpYNFBJeWVsZ1V0M2U0UFJ1aHczdWdPcVZnM3hhNUZxVlIwazJmVzU5T1RBd21KSGhNV2ZkdDhlRTZ4dUJ6LWlTVWRQWEo?oc=5" target="_blank" rel="noopener noreferrer">【きょうから】モスバーガー、5年目の“とり竜田”は2種類 “濃厚”にんにく＆クリームチーズor“さっぱり”黒酢＆レモンから気分で選べる</a></h3>
+    <p class="summary">競合動向として「【きょうから】モスバーガー、5年目の“とり竜田”は2種類 “濃厚”にんにく＆クリームチーズor“さっぱり”黒酢＆レモンから気分で選べる」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">KFC</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 18:41</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiUEFVX3lxTFBKSm5wS1Naa3czNTRBcUQ3T0ZZdHFaWmR0QzFmYllaVmxSVXNaNVJIekN4blV6UkozRUdwemRBX2c2a0dfVDQ0ci1jNkpodDBa?oc=5" target="_blank" rel="noopener noreferrer">『原神』×「KFC」コラボ第2弾！アルハイゼンとカーヴェの特別BOX付き「原神コラボパック」2種がKFCネットオーダー限定で販売！アイテムコードの配布や抽選キャンペーンも実施</a></h3>
+    <p class="summary">競合動向として「『原神』×「KFC」コラボ第2弾！アルハイゼンとカーヴェの特別BOX付き「原神コラボパック」2種がKFCネットオーダー限定で販売！アイテムコードの配布や抽選キャンペーンも実施」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 13:09</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE83SEcwY1dtNEtRSkQwa3d6cE9aMGF5V2VHY0l4M3dXNl9pd0MwcWstck1CYm0xRU44YkMwdU5iT2hnVDAyd2cxblgxWmE5eDVSSm1tXzdnQUlPZw?oc=5" target="_blank" rel="noopener noreferrer">【原神×KFC】コラボ第2弾が6月10日より開催。アルハイゼン＆カーヴェの限定BOXやアニメイトでのグッズ展開も</a></h3>
+    <p class="summary">競合動向として「【原神×KFC】コラボ第2弾が6月10日より開催。アルハイゼン＆カーヴェの限定BOXやアニメイトでのグッズ展開も」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 11:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiU0FVX3lxTFBkVmFCRURTYjItbUZYMGVZRGZheUk5Z1F4cHdraG1rWUM4Z2xtWHRXanNBNWpSdVlQYXp6Tl9ydUozR3lMSHlUR3g2UTZMa2l1MGYw?oc=5" target="_blank" rel="noopener noreferrer">【KFC｜『原神』コラボ第２弾】 ゲーム内アイテムプレゼントのほか 抽選で限定デザインのタペストリーが当たる！ 「原神コラボパック」 6月10日(水)から6月30日(火)の期間限定で販売 ～KFCネットオーダーにて6月3日(水)から事前予約開始～｜日本ケンタッキー・フライド・チキン株</a></h3>
+    <p class="summary">競合動向として「【KFC｜『原神』コラボ第２弾】 ゲーム内アイテムプレゼントのほか 抽選で限定デザインのタペストリーが当たる！ 「原神コラボパック」 6月10日(水)から6月30日(火)の期間限定で販売 ～KFCネットオーダーにて6月3日(水)から事前予約開始～｜日本ケンタッキー・フライド・チキン株」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 00:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiakFVX3lxTE42RlU5dGFmRmFUTHcxeEVoM3daT2dqb0hMUktqMGwtWkdtbndfS0VlemJWYWItY1QyRm0tRmZiYVp6TDVOMHlqZml0MXdWdHFScHZsanVtQ3pPT1R1aDNSVDRDTTFycU5HZWc?oc=5" target="_blank" rel="noopener noreferrer">ケンタッキー、オリジナルチキンをお得に楽しむ「とりの日パック」いよいよ発売</a></h3>
+    <p class="summary">競合動向として「ケンタッキー、オリジナルチキンをお得に楽しむ「とりの日パック」いよいよ発売」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">ロッテリア</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/27 07:27</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiaEFVX3lxTFBRZmlqZzNxaER2MG1qWVp6ajhENkVxbC1LSE9LOTdyc3g2UmhjbHlQLXc5S1V5b2VYdHRfTmsxU0ZrU2FMUlVMOGZaUFY5ejJ4R0NCYmpTRFlQNXM1Nko3a21GSURDVmNR?oc=5" target="_blank" rel="noopener noreferrer">＜画像2 / 3＞山の日記念！ロッテリアで1日限定山盛りポテト半額</a></h3>
+    <p class="summary">競合動向として「＜画像2 / 3＞山の日記念！ロッテリアで1日限定山盛りポテト半額」が注目されています。</p>
+    <div class="source">ロッテリア - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+          
+
+          
+          <h2><span class="h2-icon">📚</span>書籍・出版情報</h2>
+          
+            <p class="empty">該当する書籍データはありません。</p>
+          
+
+          <h2><span class="h2-icon">🔗</span>参照URL一覧</h2>
+          <ol class="refs">
+            
+              <li><a href="https://www.youtube.com/watch?v=harpY9g_xW0">【衝撃】全品均一価格！？日本の「鳥貴族」を初めて食べたイギリス人兄弟のリアクションが止まらない！</a> / YouTube - マークロッキー Mark Lockey</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=4Wqqg2MEqyU">Maccas Benny Bagel Review #russeats #mcdonalds #maccas</a> / YouTube - Russ Eats</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=OmcMoXDEWVg">5/27〜マクド新作スパイシーナゲット好きなだけ爆食い何個いける？#マクドナルド#新作#スパイシー#ナゲット</a> / YouTube - ムロタク【食いしん坊】</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=_EfMyCqakxs">The Big Mac Hack McDonald’s Hates 🤯</a> / YouTube - Pixel Theory</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=gq_7LLWH_Tc">マクドナルド新作スパイシーチキンマックナゲットがまたまたまたまた発売！ #マック #マクド #マクドナルド</a> / YouTube - サラダグルメちゃんねる</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=dok4cQDNBnY">5/27新発売のマックのマスカットスムージー！#shorts #マスカットスムージー #mcdonalds #マック新作 #japanesefood #muscat</a> / YouTube - トレンドグルメ🍭🍓</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=f1GUEsbn2q8">We’re trying the new pineapple mango refresher #meme #funny #reaction  #lol #viralmoment</a> / YouTube - Herms Southern Kitchen Shorts </li>
+            
+              <li><a href="https://www.youtube.com/watch?v=3MAsQvfw9PU">ご当地マック！僕はチキンが1位じゃないです！！！</a> / YouTube - ハットリは回転寿司厨</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=y1gOcVRtruk">マックスパイシーナゲット、このソースが熱い</a> / YouTube - くりむ</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=WqptJbz_BfM">【本音レビュー】てりやきに合う！？マクドナルドのご当地バーガー食べてみた【#Japanesefood 】</a> / YouTube - 食べるのダイスキ、こめこさん / komeco channel</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=rMXlMHvn_88">マックの新作今日5/27発売のスムージーを飲みました✨ #マクドナルド #ランチ #ハッピーセット</a> / YouTube - 👠トコトコとっと</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=bdsQxqwSr3U">下校中の小学生を横目に動画の為にマック買いに行ってなんとも言えない気持ちになる23歳フリーター</a> / YouTube - 爆食山本遼真!?</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=mxVL8YYQ3rU">【豪遊🍔マクドナルド期間限定メニュー🍔】マクドナルドで新作バーガー含む3500円食べました。（北海道じゃがチーズてりやきが一番好き）　#マクドナルド #ハンバーガー #期間限定メニュー　#散財</a> / YouTube - みずいろ商事</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=9xf1DFnJwbA">マクドナルドの新作3つを紹介します！どれも美味しかった！#鹿児島#マクドナルド#マック#マクド#新作#ハンバーガー</a> / YouTube - びーん@色々投稿</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMidEFVX3lxTE8ydm5QdUlObEJTSjlHb1dRU1diUldCeWtmbG9haGZXUGpuYTAwbXFJUVFWOU9McjJkSjlwckotOVFaV0gwTXB4NWd3UWlGMEhtc0xfTjQtRV8xekNQTWFPWFdaMkp6Ml82R0I1THppWmI5ZE1r0gGIAUFVX3lxTFBIeTh5WDE0eHdJZUxRdk9nbGp4QkhQWFo5ZEVpYlJnSVNjbWNDcEhPdnA3UUJTV1NvYUI1c3hoVnpxNER0OXU3OTg4dVN2OENhMElSaXl0TjRURjRLTEg5NzZMc09DX0dOMEx1VDFHRE9kZGpfaEwtaWxlNUVGNnQwTExVdVF5RHI?oc=5">マクドナルド新メニューまとめ　期間限定、復活メニューはいつから販売？どんな味？マックの今が丸わかり【2026年5月27日更新】</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxNWUVxX0NweVhOc18xcEZibFZ2eVhfREQzWTBOWmxaQlpXUmFvRFFwRGY1VlIwek5vUWxlZ25hb28zckdGWXJ0U3VQYmhxcjF4c2hQWWZqNVZiTVg1eDdXT0FLVjJNNVlRZ0dyRURxWWdjY0JCcHJSdnZzdlprM1F5YUE2cUd3VGE4?oc=5">マクドナルド「290円の新商品」を食べた正直な感想 人気メニューが1年ぶりに登場（進撃のグルメ） - エキスパート</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiVEFVX3lxTE1NQ0VHdGpha3Q4RG9rVkJhMkxWYzRDS0twQmY0UDRGUTFzLXRJbjdVQlBfSkZEYm0wRU90LVViQzF1T181OVNFZ0xsdlQtZENyTVRsTw?oc=5">【きょうから】「食欲そそる」マックナゲットの夏ソース、新作2種が登場</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTFBQNWV4d2R3VmF6MElNY2ZqNzk0elI0T1RWUkMyMWxKLTB1S1JBdVNwTm5rcnZ4WVNIU3YySmdXQVdzS09HblNydWNTX2JjbEpKczY5bmEzTXNoRVFyZGdMamFUR1JzVFBnTWEzbTBEM2pBWlI4OENKMG1wZU1wVDQ?oc=5">【きょうから】マクドナルド、旨辛な「スパイシーチキンマックナゲット」限定販売 2種の新ソースも登場（オリコン）</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxQUEdyUlJiUS1rMEdpemt0RmhkQmtUQW11Q1JiaWlSX0xmcm81VGF2N3doQUJKXzZHcmVJanV1djFyZURQNGlsUU9QdWM1ZFA5SHNFMlN3WnhNRGhaY0hWTW8wODFaclc2M0pkWGgzRV96WElhZ25Ydi1qdkI1ZHNqQnptWjhhQTFx?oc=5">マック新作「北海道じゃがチーズてりやきマフィン」を食べてみた感想（グルメバカごろり） - エキスパート</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE5Kckg3cnI0VGcwMHAyY2E3U0VhdUxJX1B1MWU5V3JLYkJ3dVhySUhMQWxVV3UyU013SGMzdG04SW5FUzZPYUVxMGNDVVF6R2Rib1VaRXVzMA?oc=5">食べくらべポテナゲ大</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE9ZaFM3dVRHQjNhVkZYUUppMGdDaWVGajZQaXduSnBLNWdrejM3MXdRSlJ3dXFQVWRyRzlLYlFzaXA4azJGS0I3clhtM25VbVFlc0tyRWJINA?oc=5">甘辛セット</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiVEFVX3lxTE5XMVBCeUNtLUhzUkNKNW84Uk12VEpuWjdtYmpSRTFjRUdCT2ZkQ2VxejNrTU84dURycjdqYWIwYWFkQ1hlTnBtUGh0azRIeTRWTU9RZ9IBWkFVX3lxTE1BMmRJUjRGdlpmallxSm8wQU5ReVlmUGk0NUtLZnltQmFoamp5R25FcmhtUHdBcXk1Sm0ybVl4bHpDSTBURHc1MnpvSXNySHpSWjQzdzdkNXhKUQ?oc=5">味も見た目も楽しめる！モスバーガーから食べるシェイクが新登場</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxOWllZYVIxcGlqY0F1ODJrekJTMFRsaGNCM2tpd09OM1NRQ0YweEN4TVJ3eUZSOFlyYzIwaXE2UXpQamVvcGlhZVktWWtBdW10Tk50V3V5OXlxX3YxSzJKMEE0a2NNQ1JPNVdiMjVUS0R6bXh0RmpHZDQ5bjFpVjZrWjNDdXB4Rm9tOF9BYl93Y0wtUDJqS2k0QlNXZkN2Z2d1UkU5SEJhdk1XOGkxT2xFZVJfOXlzTnkyRi1KX216ZHN6aHBKY3JSS2YwVm5BNW45T0c1VHREWEJqSXc?oc=5">「マクドナルドトーナメント」に関するプレスリリース一覧</a> / PR TIMES - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTE1ZUnJaUTRjV1M5VnJ2R2NSWHkxOG4zeENGOE55cWtCSmZ2RmU5TjdXa2VBM25PNW5MWklRNDdyRzVGTVptbTJQSWJPd3RRTm9Gd3F0WUJwTmRWTW5rMTE4VW44ZWoxVUnSAWRBVV95cUxQZzBIQUdOaXdNMDkwUG1RM0ZGeHo5NEdEbkhwOUVqMHNRSzZCUkNuamVELUFSamd4NjZmU1lMU1p1RWh2TXdmeWdGRnJ3ZFJvZFdhZ0dLZVRnYzQ3VmNPbDR2SVQ3?oc=5">屋台めし「ケバブ」をドムドムハンバーガー流に再現　期間限定「ケバブバーガー」 - J-CAST ニュース</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=O3rkZhTu6FQ">しばいぬがマックの限定食べてみた！！</a> / YouTube - どうもしばいぬです。</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiUEFVX3lxTFBKSm5wS1Naa3czNTRBcUQ3T0ZZdHFaWmR0QzFmYllaVmxSVXNaNVJIekN4blV6UkozRUdwemRBX2c2a0dfVDQ0ci1jNkpodDBa?oc=5">『原神』×「KFC」コラボ第2弾！アルハイゼンとカーヴェの特別BOX付き「原神コラボパック」2種がKFCネットオーダー限定で販売！アイテムコードの配布や抽選キャンペーンも実施</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTFBtamtUS2lydFlMN2g1bkR6M1NMSmhobkc3bktoczBjQ0FKeElaZWtIT2hlZ0FzdHFiN1RrYS1wc3g0TFdfUkY1VU5renRxa01KWHZicE1R0gFbQVVfeXFMUEt3ZDVJQ0FJU1RFeUE4Nzcxc1NSUE84Q21sVm1xYnZsTUxYSHp0c21NUzhHeTB3aVFmRDlRRnRhaEhIM2NMbjdyaXo1akx2X0RyeEN3ck5xUDJpRQ?oc=5">モスバーガーに期間限定フード続々！「白いモスバーガー」や「ホット スパイスモスチキン」も</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE83SEcwY1dtNEtRSkQwa3d6cE9aMGF5V2VHY0l4M3dXNl9pd0MwcWstck1CYm0xRU44YkMwdU5iT2hnVDAyd2cxblgxWmE5eDVSSm1tXzdnQUlPZw?oc=5">【原神×KFC】コラボ第2弾が6月10日より開催。アルハイゼン＆カーヴェの限定BOXやアニメイトでのグッズ展開も</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiU0FVX3lxTFBkVmFCRURTYjItbUZYMGVZRGZheUk5Z1F4cHdraG1rWUM4Z2xtWHRXanNBNWpSdVlQYXp6Tl9ydUozR3lMSHlUR3g2UTZMa2l1MGYw?oc=5">【KFC｜『原神』コラボ第２弾】 ゲーム内アイテムプレゼントのほか 抽選で限定デザインのタペストリーが当たる！ 「原神コラボパック」 6月10日(水)から6月30日(火)の期間限定で販売 ～KFCネットオーダーにて6月3日(水)から事前予約開始～｜日本ケンタッキー・フライド・チキン株</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiaEFVX3lxTFBRZmlqZzNxaER2MG1qWVp6ajhENkVxbC1LSE9LOTdyc3g2UmhjbHlQLXc5S1V5b2VYdHRfTmsxU0ZrU2FMUlVMOGZaUFY5ejJ4R0NCYmpTRFlQNXM1Nko3a21GSURDVmNR?oc=5">＜画像2 / 3＞山の日記念！ロッテリアで1日限定山盛りポテト半額</a> / ロッテリア - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBEcENFU3ZJM1ItODJSclFYdFJDa2xGWk9Ka0t6RkNZZXdGYVNxRDk4by13WDg5MzJ4QVpOSWtWVTlXMkNDX2xUNXhLMk4zcExMR1VBaHloX2R4UHQyNVJHMWhPaGtPZTg?oc=5">【きょうから】モスバーガー「アボカド海老カツバーガー」新発売 「海老エビフライバーガー」はパワーアップ</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiWEFVX3lxTE4yQzBzMTBaSFY3anpYNFBJeWVsZ1V0M2U0UFJ1aHczdWdPcVZnM3hhNUZxVlIwazJmVzU5T1RBd21KSGhNV2ZkdDhlRTZ4dUJ6LWlTVWRQWEo?oc=5">【きょうから】モスバーガー、5年目の“とり竜田”は2種類 “濃厚”にんにく＆クリームチーズor“さっぱり”黒酢＆レモンから気分で選べる</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE42RlU5dGFmRmFUTHcxeEVoM3daT2dqb0hMUktqMGwtWkdtbndfS0VlemJWYWItY1QyRm0tRmZiYVp6TDVOMHlqZml0MXdWdHFScHZsanVtQ3pPT1R1aDNSVDRDTTFycU5HZWc?oc=5">ケンタッキー、オリジナルチキンをお得に楽しむ「とりの日パック」いよいよ発売</a> / KFC - ニュース</li>
+            
+          </ol>
+        </section>
+      
+          
+        <section class="report-panel" data-panel="2026-05-26" data-window="2026/05/26 00:00 - 2026/05/27 00:00">
+          
+          
+            <div class="ai-summary">
+              <div class="ai-summary-label">🤖 AI · 本日のマクドナルドサマリー</div>
+              <p class="ai-summary-text">本日のマクドナルド関連では「昨年は売り切れ続出…マクドナルド「巨大化メニュー」が今年も登場、Lサイズを超える大きさに（Lmaga.jp）」が確認されています。YouTubeでは「Trying Everything at McDonald’s Korea 🇰🇷」が86,575回再生されています。競合ではロッテリア「ロッテリア話題の新商品「麺屋武蔵ラーメンバーガー」を食べてみた」、KFC「【ケンタッキー】「カーネルクランチポテト」が復活! 新作「辛旨ジンガー」も登場」、KFC「【KFC】サクッとケンタ第2弾「辛旨ジンガー」発売、「カーネルクランチポテト」も復活（食品産業新聞社ニュースWEB）」、KFC「ケンタッキーおすすめメニュー【2026年6月】土日も買えるお得なランチセットも」などの動きが確認されています。</p>
+            </div>
+          
+          <h2><span class="h2-icon">☀️</span>今日のまとめ</h2>
+          <section class="digest">
+            
+              <div class="digest-item">2026/05/26 12:19時点では、マック関連で「昨年は売り切れ続出…マクドナルド「巨大化メニュー」が今年も登場、Lサイズを超える大きさに（Lmaga.jp）」が大きな話題です。商品内容だけでなく、販売状況やSNS反応まで合わせて確認したい流れです。</div>
+            
+              <div class="digest-item">YouTubeでは「Trying Everything at McDonald’s Korea 🇰🇷」が86,575回再生されています。サムネイルとタイトルの見せ方は、SNS投稿や店頭訴求の参考になりそうです。</div>
+            
+              <div class="digest-item">競合・隣接業界では「池袋にチキンハンバーガー店「ハングリィジョーズトーキョー」 日本2号店（みんなの経済新聞ネットワーク）」を押さえておきたいです。価格、メニュー戦略、デジタル施策の見せ方をマック企画と比較できます。</div>
+            
+          </section>
+          
+          
+            
+            <h2><span class="h2-icon">🎬</span>YouTube注目動画<span class="section-count">6件</span></h2>
+            
+              
+                <section class="cards">
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=TuAoW0AabG0" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/TuAoW0AabG0/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/26 23:24 / YouTube - Chambo</div>
+    <h3 class="title">Trying Everything at McDonald’s Korea 🇰🇷</h3>
+    <p class="summary">SNS話題として「Trying Everything at McDonald’s Korea 🇰🇷」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 86,575</span>
+      <span class="metric">いいね 3,303</span>
+      <span class="metric">コメント 46</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=-fRHM8u8FWA" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/-fRHM8u8FWA/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/26 08:00 / YouTube - Food Dip</div>
+    <h3 class="title">Big Arch from McDonald’s for the Umteenth time </h3>
+    <p class="summary">SNS話題として「Big Arch from McDonald’s for the Umteenth time 」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 7,139</span>
+      <span class="metric">いいね 522</span>
+      <span class="metric">コメント 161</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=Yuf3heLLW2w" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/Yuf3heLLW2w/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/26 17:00 / YouTube - Rei7 / Reina【にじさんじ】</div>
+    <h3 class="title">【新作】正直レビュー！ご当地マック三種！「北海道じゃがチーズてりやき」「名古屋名物 手羽先風黒胡椒ジューシーチキン」「博多明太バターてりやき」【 Rei7 / にじさんじ 】</h3>
+    <p class="summary">SNS話題として「【新作】正直レビュー！ご当地マック三種！「北海道じゃがチーズてりやき」「名古屋名物 手羽先風黒胡椒ジューシーチキン」「博多明太バターてりやき」【 Rei7 / にじさんじ 】」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 11,330</span>
+      <span class="metric">いいね 774</span>
+      <span class="metric">コメント 49</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及、マックに直接言及、チキン系商品の話題</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=W4LWAyBozLw" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/W4LWAyBozLw/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/26 10:08 / YouTube - ItsMeBolt</div>
+    <h3 class="title">McDonald’s Hack…💰 #mcdonalds #moneyhacks #viralvideo</h3>
+    <p class="summary">SNS話題として「McDonald’s Hack…💰 #mcdonalds #moneyhacks #viralvideo」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 12,372</span>
+      <span class="metric">いいね 76</span>
+      <span class="metric">コメント 6</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=CZ2n-F4LzpI" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/CZ2n-F4LzpI/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/26 07:51 / YouTube - Family with Four Shorts</div>
+    <h3 class="title">Trying McDonalds KPop Demon Hunters Meals!</h3>
+    <p class="summary">SNS話題として「Trying McDonalds KPop Demon Hunters Meals!」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 12,504</span>
+      <span class="metric">いいね 50</span>
+      <span class="metric">コメント 7</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=tqnQsblKZbg" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/tqnQsblKZbg/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/26 21:30 / YouTube - 里翔のおすすめ生活</div>
+    <h3 class="title">マクドナルド5月末新作、今これ強い7選 #マクドナルド #マック新作 #グルメ</h3>
+    <p class="summary">SNS話題として「マクドナルド5月末新作、今これ強い7選 #マクドナルド #マック新作 #グルメ」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 11,234</span>
+      <span class="metric">いいね 39</span>
+      <span class="metric">コメント 0</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及、マックに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">🍔</span>マクドナルド関連ニュース<span class="section-count">3件</span></h2>
+            
+              
+                
+                <section class="list" data-collapsible="official-2026-05-26">
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 12:19</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTE5lM2pKVnVVUzA3bU1jdjE5N21PZ3NRRkc2UGREYlRXQ0dnVGMxRnJOUVowdWR5bE9TaC0ydktZWUEySXU0TVpDa2VrcUUzYWxyNEtTOUdjNGttVzVOSml6bzhhUmFONG1TcWFITHAzSWswQmJ4S3VNMXRodk9VTms?oc=5" target="_blank" rel="noopener noreferrer">昨年は売り切れ続出…マクドナルド「巨大化メニュー」が今年も登場、Lサイズを超える大きさに（Lmaga.jp）</a></h3>
+    <p class="summary">マック/公式発表として「昨年は売り切れ続出…マクドナルド「巨大化メニュー」が今年も登場、Lサイズを超える大きさに（Lmaga.jp）」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXkFVX3lxTE1mNE0xV3Q0S25hMW1vckNqUTNTS2pHOEZUT2NHSGlsNmI5NkdCeUVQRlNIR0dXQWVtZ3A1STRJb2VGaTUxUkFoeGlrakhjaWxrQjBNdmdGOGkta0x6ckE?oc=5" target="_blank" rel="noopener noreferrer">【公式】マクドナルド 草津野村店 おもてなしクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a></h3>
+    <p class="summary">マック/公式発表として「【公式】マクドナルド 草津野村店 おもてなしクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 12:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiVEFVX3lxTFAydEl5QWNDWUhVMXRoZWh1MlBUMWU2Q1VjMlNYRlFEVkRNQ1NvYWZQMFc1UlIwZ3VHUHdnUm9pMy11S1BSNU5QYUhGeXJJcU1vU2t4bQ?oc=5" target="_blank" rel="noopener noreferrer">マクドナルド夏限定「スパイシーナゲット」、選べるソースは4種から</a></h3>
+    <p class="summary">マック/公式発表として「マクドナルド夏限定「スパイシーナゲット」、選べるソースは4種から」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    
+                  
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">📱</span>X / Instagram / TikTokで伸びている話題</h2>
+            
+              <p class="empty">該当データはありません。</p>
+            
+          
+
+          
+          
+          
+          <h2><span class="h2-icon">🏁</span>競合・隣接業界の動き<span class="section-count">7件</span></h2>
+          
+          
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">モスバーガー</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 14:22</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxOTnF1VmQySXF1cm5sZjV5cU5haUk4Qy1aS0xBbi05RlpRaElYTjBsaWZ1THdISWYyX0FUMHVmbXNreW9Ncm9mak1VeUVwc3h1RXBfZEpMVFlJSnJYTXNEX0N5WDY4dUFab19Kbjl2Q3hnb1RIOGJkeWp6aU5hS29RQ3BDa0laN3pz?oc=5" target="_blank" rel="noopener noreferrer">モスバーガーの新メニュー3種類まとめ また注文したくなるおいしさ（進撃のグルメ） - エキスパート</a></h3>
+    <p class="summary">競合動向として「モスバーガーの新メニュー3種類まとめ また注文したくなるおいしさ（進撃のグルメ） - エキスパート」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">バーガーキング</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 03:02</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMilgNBVV95cUxPM0ZUQmwzQVZ4RERxRmRWaVVHVWVDV1hCVnFwQks4TndVcnktbURKNlNDbEJVMUdKR3ZjVVNqbmlJYVdYV3JMakJGd1FIZzRhWHVNMnJHYVlUTHIzSFp1aDR0LXF6YU9tMDl1bEl4SDVqUHBXVVhYMFllSFVjOFdwaElaX3pBcDJTeVU1SUhTZDFSYWFyZ2tSeE95T1FXbVRrcDFwcmJORGY3WEdYTmExRWhGWlZCbVppQ1N2eTBDMjV0WU9MUnNKOFhhZkxRMmFNZmhOMUlSZ0k0OFZIWXZOal92N0d0Qnl3VWhTVkF1M245ZElVcnN2YUhybUJFM1lEeFl6alZxZWNFanBCMS16WU0tTXV0V0pfQzk3eXdGV2swMVVsSUE0Sl9yeUVXdW51dE5aVEtfR01oYW45bjI4UlhudmZhb0lCbTBRVXdnc2praFB6cUVoNW1UVG1yYlJlc1NDRWVQRzFHSFZTZjQyWGtJYTBkWGVHTzFwbUtCNFRxaTB1OHZtWDlJNnp1VFh0WEhUN0l3?oc=5" target="_blank" rel="noopener noreferrer">バーガーキング、7年ぶり新潟にオープン 362店舗→2028年中に600店舗めざす「未進出エリアにも新規出店予定」</a></h3>
+    <p class="summary">競合動向として「バーガーキング、7年ぶり新潟にオープン 362店舗→2028年中に600店舗めざす「未進出エリアにも新規出店予定」」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">KFC</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 18:43</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE5PV2R0V190R3hQbnBQd2xwSDA3eF8zdl8ydmhzU3NUNVl0YzRZM3IxTVROLW51dmFCQklnMC16cjN2a3BiTFI3RF9udXBVR2ZTUVB0cWhnWWxJSHNU?oc=5" target="_blank" rel="noopener noreferrer">【ケンタッキー】「カーネルクランチポテト」が復活! 新作「辛旨ジンガー」も登場</a></h3>
+    <p class="summary">競合動向として「【ケンタッキー】「カーネルクランチポテト」が復活! 新作「辛旨ジンガー」も登場」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 17:06</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTE81U29lZU1UcVl0c1VoeXR5NXZObF80R2RYVFo4SGhhYTNEWVRVRjhZc2dWeDFjU2RMWmFVUmNySTlvamJodXRvVTBhRmE3RlpHUTlpV1JaS0tJRUQ1clZaWGVYdGdkZG52M3B6bElkbGctNVNEZVhvd201RER0OUk?oc=5" target="_blank" rel="noopener noreferrer">【KFC】サクッとケンタ第2弾「辛旨ジンガー」発売、「カーネルクランチポテト」も復活（食品産業新聞社ニュースWEB）</a></h3>
+    <p class="summary">競合動向として「【KFC】サクッとケンタ第2弾「辛旨ジンガー」発売、「カーネルクランチポテト」も復活（食品産業新聞社ニュースWEB）」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiQ0FVX3lxTE0wMVB1Y0FTb3FIelYzbU9uTGN5NXM1WE1QRnZnRGZLc3p1X0tZTEQ1V1FpQngzaE8wc2hFbmdYU2pEZFk?oc=5" target="_blank" rel="noopener noreferrer">ケンタッキーおすすめメニュー【2026年6月】土日も買えるお得なランチセットも</a></h3>
+    <p class="summary">競合動向として「ケンタッキーおすすめメニュー【2026年6月】土日も買えるお得なランチセットも」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 15:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMif0FVX3lxTE1LQlpqejFmVXBpaDVEY09FaW9NTWRMNmtXNElGQnNubXNnY21xMDlIU2xKTWhEeUl5Z0ZwWG5GY1VLdmZpLXc3bzBLTkRVZUNDRExjNURLLUNfcGVuV2lmSGp3YlZFNU5HZ0REOEtfSVB1cFNtLXpmaXRpejlRWHc?oc=5" target="_blank" rel="noopener noreferrer">KFC史上初のアボカドバーガー完成、スパイシーなワカモレ風に！ 「ザ・アメリカンバーガーズ」で5月27日から発売</a></h3>
+    <p class="summary">競合動向として「KFC史上初のアボカドバーガー完成、スパイシーなワカモレ風に！ 「ザ・アメリカンバーガーズ」で5月27日から発売」が注目されています。</p>
+    <div class="source">KFC - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">ロッテリア</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/26 23:55</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiU0FVX3lxTFBNSHdORDRMdDRyUlFpWmRpR1FwZDJFYkRfLVJpdmJ3eGNwU3RRcFRJXzUtaXE4bWFuRU1IS3RFVThLTUFCc3pMTTFjamg2OExBYWM40gFYQVVfeXFMUGtUbUFPWXVTTEQzSFh1YklDSUF4T2lPV05WNWt2YTB6RGRhV2FRVGNNQnFkRzZTM0VjenBibjZnOV9TV3l6SlF4Y3pDLW4wb3VCSVNza28yZw?oc=5" target="_blank" rel="noopener noreferrer">ロッテリア話題の新商品「麺屋武蔵ラーメンバーガー」を食べてみた</a></h3>
+    <p class="summary">競合動向として「ロッテリア話題の新商品「麺屋武蔵ラーメンバーガー」を食べてみた」が注目されています。</p>
+    <div class="source">ロッテリア - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+          
+
+          
+          <h2><span class="h2-icon">📚</span>書籍・出版情報</h2>
+          
+            <p class="empty">該当する書籍データはありません。</p>
+          
+
+          <h2><span class="h2-icon">🔗</span>参照URL一覧</h2>
+          <ol class="refs">
+            
+              <li><a href="https://www.youtube.com/watch?v=TuAoW0AabG0">Trying Everything at McDonald’s Korea 🇰🇷</a> / YouTube - Chambo</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=-fRHM8u8FWA">Big Arch from McDonald’s for the Umteenth time </a> / YouTube - Food Dip</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=Yuf3heLLW2w">【新作】正直レビュー！ご当地マック三種！「北海道じゃがチーズてりやき」「名古屋名物 手羽先風黒胡椒ジューシーチキン」「博多明太バターてりやき」【 Rei7 / にじさんじ 】</a> / YouTube - Rei7 / Reina【にじさんじ】</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=W4LWAyBozLw">McDonald’s Hack…💰 #mcdonalds #moneyhacks #viralvideo</a> / YouTube - ItsMeBolt</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=CZ2n-F4LzpI">Trying McDonalds KPop Demon Hunters Meals!</a> / YouTube - Family with Four Shorts</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=tqnQsblKZbg">マクドナルド5月末新作、今これ強い7選 #マクドナルド #マック新作 #グルメ</a> / YouTube - 里翔のおすすめ生活</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=N6OdywkigJ4">新作マックご当地バーガーどれが一番美味しいか検証！</a> / YouTube - プレシャス有岡</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=0qK1LhxZ7yo">Trying McDonald’s new drink! #mcdonalds #spriteberryblast #dirtysoda #foodie #tastetest</a> / YouTube - Sierra Marchant</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=HIfO8raG2a4">UNLIMITED Mcdonald's food hack EXPOSED on podcast!</a> / YouTube - RockstarFlipper</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=vZYJOfz2q9E">【マック新作食べ比べ】#午後のグルメ#マクドナルド#マック#マック新作#新商品#グルメ好き#グルメvlog#東京グルメ#ハンバーガー#飯テロ#グルメ女子</a> / YouTube - 午後のグルメ</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=WrlbVboZuaE">#マクド新作#マクドナルド#シャカシャカポテト金沢名物黒カレー味</a> / YouTube - ユキピィー</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=3MhbTrHl7to">【ギャグあり】マックチキンセット食べてみた</a> / YouTube - 美味しい商品レビュー😃</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=s7-0BaHnoDk">発売日の新作#マクドナルド#マック#新作#ハンバーガー#食べる #夫婦#夫婦の日常 #夜ご飯# #暮らしチャンネル #日常vlog #主婦 #主婦vlog #ショート動画</a> / YouTube - はなのひととき。</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=MkpPX7JUcd0">trying Mcdonald's NEW refresher #mcdonalds #youtubeshorts #drink #foodreview #shorts</a> / YouTube - AsTheTubeTurns</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=nh3lOdKWvkw">【マック新作】「名古屋手羽先風黒胡椒ジューシーチキン」を２倍美味しくするぜ #新商品 #飯テロ #マック #手羽先 #マクド #新商品 #マック新作 #名古屋 #shorts #アレンジレシピ</a> / YouTube - 逆張りグルメ</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=ErXOWh6gB28">寝られへん夜は割り切って起きちゃった方が良い事に気付いた23歳フリーター</a> / YouTube - 爆食山本遼真!?</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE5lM2pKVnVVUzA3bU1jdjE5N21PZ3NRRkc2UGREYlRXQ0dnVGMxRnJOUVowdWR5bE9TaC0ydktZWUEySXU0TVpDa2VrcUUzYWxyNEtTOUdjNGttVzVOSml6bzhhUmFONG1TcWFITHAzSWswQmJ4S3VNMXRodk9VTms?oc=5">昨年は売り切れ続出…マクドナルド「巨大化メニュー」が今年も登場、Lサイズを超える大きさに（Lmaga.jp）</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTE1mNE0xV3Q0S25hMW1vckNqUTNTS2pHOEZUT2NHSGlsNmI5NkdCeUVQRlNIR0dXQWVtZ3A1STRJb2VGaTUxUkFoeGlrakhjaWxrQjBNdmdGOGkta0x6ckE?oc=5">【公式】マクドナルド 草津野村店 おもてなしクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiVEFVX3lxTFAydEl5QWNDWUhVMXRoZWh1MlBUMWU2Q1VjMlNYRlFEVkRNQ1NvYWZQMFc1UlIwZ3VHUHdnUm9pMy11S1BSNU5QYUhGeXJJcU1vU2t4bQ?oc=5">マクドナルド夏限定「スパイシーナゲット」、選べるソースは4種から</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=HvsFyRoN2Rg">しばいぬがマックの三角チョコパイ食べてみた！！</a> / YouTube - どうもしばいぬです。</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE5zMFk0WWZ5SzdXOXp4SUp2TXFZVEZtcDU3c1pGSjlfQXMtNXE5TE5yaEJrMzVfWlZxWFRHUVI3ckM0MU05S05jQ0N5TkduZFZqVUVnZ2c2YWNGS3JGUjJNNHFTMzVwaWFjOUhlclpUU0kzS1Btc3lGUml5U0lMX00?oc=5">池袋にチキンハンバーガー店「ハングリィジョーズトーキョー」 日本2号店（みんなの経済新聞ネットワーク）</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE9Sc3pGamQyQVJBRk80TWRkdzBIY1l2MGQ0SzllSmtOam8zMVJpbE9NQjRjZzFPeWpGYXVUYTVveW4xRTRSZ0lINU1hd3V5MDdRa1pQZE1GbTZaS0dzb202UHV1Qjl2NFdVQXc?oc=5">スターゼン、9月末株主にマックカードの「記念優待」実施！</a> / PR TIMES - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiS0FVX3lxTFBDUkhMMEo1dmhFZTRyd0F3SW14SV8ycm5YYmpZekJuZWpLTmxIbDZsTGJSODVWUy1VN0EzeW5pX0VRNTc2dE03VmE2Zw?oc=5">【モスの本気】はみ出る巨大2尾に悶絶！「贅沢海老フライバーガー」がハンバーガーの枠を超えていた…新作3品をグルメライターが実食</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE01MHl4b3lFeEE2QllKTElMNFRFOExkS1JvUTNsc2NmRWpPbC1hamhUbjhTUDkxR2JUUVNSeTN5V2FUcXhMcnhXdGZudjBlcTdqUmR2UFY1NF95UdIBX0FVX3lxTE0wSHpFYW9XeWhkZ2VaWjR0YW9qXzB2cmNhMEtRYWlaTDYway1GdTE4XzJkODRVZHFCUy1OLW4tNEZGbmJEQ2R3bnNSZjN5OWZOSGVrd2dTV1Y3eGd2Nm9V?oc=5">【入場無料】グルメバーガー日本一決定戦『～JAPAN BURGER CHAMPIONSHIP 2026～』が横浜赤レンガ倉庫にて6月12⽇ (金) ～14日 (日) 開催</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE4tTUJLZHZxOTk0WHNLZWFJWWF5UTIyZWFGbk1QamlrOUlRbjZhUWxTck9MM1Zyb3FmcllzVXNNX09uTUlWZndoQ1VIZ3BBaWxteUFUaFNyRQ?oc=5">【倒産】グルメバーガー店経営「WORLD ACTIVITY」破産手続き開始 富山から県外へ進出も…原材料高騰でハンバーガー事業継続を断念 負債総額は約1億1000万円</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE5MVWg4a243dEc0WHZBYjVqRlJPZDFYV3drMElqTGsyV1drQVdORm9NNzJEUDltQ2tzOHlUTmZ2eWQtcE1qN2dyNDJqN2NpNEtQLURndThNWFZqWU53M3NxcGlxR0hMRlFDMXc?oc=5">公益財団法人ドナルド・マクドナルド・ハウス・チャリティーズ・ジャパン 「感謝の贈呈式」「感謝の会2026」に参加</a> / PR TIMES - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE1ZYnNTQzV5VldOVnkycDFnRjVrRzFjaTFwMXdrT0FZblpDSG5vbzUwTm1LZXRnUHVXMXRRSG82Z3laSWYwTnZiZ2hFM1FwVzZaNFhudHVlcC04QQ?oc=5">立川グリーンスプリングスに「THE PACIFIC ROOM」6/1(月)オープン！百名店監修バーガーやふわふわパンケーキも</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiU0FVX3lxTFBNSHdORDRMdDRyUlFpWmRpR1FwZDJFYkRfLVJpdmJ3eGNwU3RRcFRJXzUtaXE4bWFuRU1IS3RFVThLTUFCc3pMTTFjamg2OExBYWM40gFYQVVfeXFMUGtUbUFPWXVTTEQzSFh1YklDSUF4T2lPV05WNWt2YTB6RGRhV2FRVGNNQnFkRzZTM0VjenBibjZnOV9TV3l6SlF4Y3pDLW4wb3VCSVNza28yZw?oc=5">ロッテリア話題の新商品「麺屋武蔵ラーメンバーガー」を食べてみた</a> / ロッテリア - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE5PV2R0V190R3hQbnBQd2xwSDA3eF8zdl8ydmhzU3NUNVl0YzRZM3IxTVROLW51dmFCQklnMC16cjN2a3BiTFI3RF9udXBVR2ZTUVB0cWhnWWxJSHNU?oc=5">【ケンタッキー】「カーネルクランチポテト」が復活! 新作「辛旨ジンガー」も登場</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE81U29lZU1UcVl0c1VoeXR5NXZObF80R2RYVFo4SGhhYTNEWVRVRjhZc2dWeDFjU2RMWmFVUmNySTlvamJodXRvVTBhRmE3RlpHUTlpV1JaS0tJRUQ1clZaWGVYdGdkZG52M3B6bElkbGctNVNEZVhvd201RER0OUk?oc=5">【KFC】サクッとケンタ第2弾「辛旨ジンガー」発売、「カーネルクランチポテト」も復活（食品産業新聞社ニュースWEB）</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiQ0FVX3lxTE0wMVB1Y0FTb3FIelYzbU9uTGN5NXM1WE1QRnZnRGZLc3p1X0tZTEQ1V1FpQngzaE8wc2hFbmdYU2pEZFk?oc=5">ケンタッキーおすすめメニュー【2026年6月】土日も買えるお得なランチセットも</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMif0FVX3lxTE1LQlpqejFmVXBpaDVEY09FaW9NTWRMNmtXNElGQnNubXNnY21xMDlIU2xKTWhEeUl5Z0ZwWG5GY1VLdmZpLXc3bzBLTkRVZUNDRExjNURLLUNfcGVuV2lmSGp3YlZFNU5HZ0REOEtfSVB1cFNtLXpmaXRpejlRWHc?oc=5">KFC史上初のアボカドバーガー完成、スパイシーなワカモレ風に！ 「ザ・アメリカンバーガーズ」で5月27日から発売</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxOTnF1VmQySXF1cm5sZjV5cU5haUk4Qy1aS0xBbi05RlpRaElYTjBsaWZ1THdISWYyX0FUMHVmbXNreW9Ncm9mak1VeUVwc3h1RXBfZEpMVFlJSnJYTXNEX0N5WDY4dUFab19Kbjl2Q3hnb1RIOGJkeWp6aU5hS29RQ3BDa0laN3pz?oc=5">モスバーガーの新メニュー3種類まとめ また注文したくなるおいしさ（進撃のグルメ） - エキスパート</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiU0FVX3lxTE5XVEdpLWcweXUyMjNQUFZMak5hNUU1bFBsQXR0WlZvOXF3cVZ5ZGs1TDhaTm80cFc0M3R2MTlHb09vTk1MMHdUeW5kcXNQRThndnlB?oc=5">【手軽に楽しめる「サクッとケンタ」シリーズ第２弾】 スパイシーな新作チキン登場 大好評のザクザクポテトも待望復活！ 「辛旨ジンガー」「カーネルクランチポテト」 6月3日(水)から数量限定で発売｜日本ケンタッキー・フライド・チキン株式会社 KENTUCKY FRIED CHICKEN JAPA</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiREFVX3lxTE9Icmd4dXdzNGpkSDV0Qi02VVhmQ3Z3V042MG5OUjhBX0dmT3ZsMlM5VVp2SFRpeng4ZlNhOHl3elNDS3pu?oc=5">マックが”ニューヨーク”ならケンタも”ニューヨーク”！？【ケンタッキー】5月27日から新メニュー3商品を投入へ！新作なら一度は食べておきたい</a> / KFC - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMilgNBVV95cUxPM0ZUQmwzQVZ4RERxRmRWaVVHVWVDV1hCVnFwQks4TndVcnktbURKNlNDbEJVMUdKR3ZjVVNqbmlJYVdYV3JMakJGd1FIZzRhWHVNMnJHYVlUTHIzSFp1aDR0LXF6YU9tMDl1bEl4SDVqUHBXVVhYMFllSFVjOFdwaElaX3pBcDJTeVU1SUhTZDFSYWFyZ2tSeE95T1FXbVRrcDFwcmJORGY3WEdYTmExRWhGWlZCbVppQ1N2eTBDMjV0WU9MUnNKOFhhZkxRMmFNZmhOMUlSZ0k0OFZIWXZOal92N0d0Qnl3VWhTVkF1M245ZElVcnN2YUhybUJFM1lEeFl6alZxZWNFanBCMS16WU0tTXV0V0pfQzk3eXdGV2swMVVsSUE0Sl9yeUVXdW51dE5aVEtfR01oYW45bjI4UlhudmZhb0lCbTBRVXdnc2praFB6cUVoNW1UVG1yYlJlc1NDRWVQRzFHSFZTZjQyWGtJYTBkWGVHTzFwbUtCNFRxaTB1OHZtWDlJNnp1VFh0WEhUN0l3?oc=5">バーガーキング、7年ぶり新潟にオープン 362店舗→2028年中に600店舗めざす「未進出エリアにも新規出店予定」</a> / バーガーキング - ニュース</li>
+            
+          </ol>
+        </section>
+      
+          
+        <section class="report-panel" data-panel="2026-05-25" data-window="2026/05/25 00:00 - 2026/05/26 00:00">
+          
+          
+            <div class="ai-summary">
+              <div class="ai-summary-label">🤖 AI · 本日のマクドナルドサマリー</div>
+              <p class="ai-summary-text">本日のマクドナルド関連では「【公式】マクドナルド 豊中上新田店 朝勤務クルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が確認されています。YouTubeでは「マックの新作うますぎる!!」が322,243回再生されています。競合ではロッテリア「山の日記念！ロッテリアで1日限定山盛りポテト半額」、モスバーガー「モスバーガーで「420円の新商品」を飲んだ正直な感想（進撃のグルメ） - エキスパート」、バーガーキング「4種のきのこをこだわりのチーズバンズでサンド！バーガーキング「マッシュルームアグリーバーガー」」などの動きが確認されています。</p>
+            </div>
+          
+          <h2><span class="h2-icon">☀️</span>今日のまとめ</h2>
+          <section class="digest">
+            
+              <div class="digest-item">2026/05/25 16:00時点では、マック関連で「【公式】マクドナルド 豊中上新田店 朝勤務クルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が大きな話題です。商品内容だけでなく、販売状況やSNS反応まで合わせて確認したい流れです。</div>
+            
+              <div class="digest-item">YouTubeでは「マックの新作うますぎる!!」が322,243回再生されています。サムネイルとタイトルの見せ方は、SNS投稿や店頭訴求の参考になりそうです。</div>
+            
+              <div class="digest-item">競合・隣接業界では「本格グルメバーガーとふわふわパンケーキを楽しむアイランドスタイルダイナー「THE PACIFIC ROOM」が6月1日、立川・GREEN SPRINGSにグランドオープン！」を押さえておきたいです。価格、メニュー戦略、デジタル施策の見せ方をマック企画と比較できます。</div>
+            
+          </section>
+          
+          
+            
+            <h2><span class="h2-icon">🎬</span>YouTube注目動画<span class="section-count">6件</span></h2>
+            
+              
+                <section class="cards">
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=CrMcsCW5hcE" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/CrMcsCW5hcE/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/25 18:19 / YouTube - パンナコタpannakota</div>
+    <h3 class="title">マックの新作うますぎる!!</h3>
+    <p class="summary">YouTuberがマクドナルドの新作を紹介</p>
+    <div class="metrics">
+      <span class="metric">再生 322,243</span>
+      <span class="metric">いいね 4,414</span>
+      <span class="metric">コメント 51</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">マクドナルドの新作が注目</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=rxiA4wagxxU" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/rxiA4wagxxU/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/25 00:56 / YouTube - メンザいふ MenzaIf </div>
+    <h3 class="title">マックの新作デカくない、、、、？？</h3>
+    <p class="summary">SNS話題として「マックの新作デカくない、、、、？？」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 15,849</span>
+      <span class="metric">いいね 558</span>
+      <span class="metric">コメント 21</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">マックに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=4SBw_PjoODg" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/4SBw_PjoODg/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/25 20:49 / YouTube - Curosiodades Culinarias</div>
+    <h3 class="title">El hack de los cajeros de McDonald's #shorts #mcdonalds</h3>
+    <p class="summary">SNS話題として「El hack de los cajeros de McDonald's #shorts #mcdonalds」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 28,204</span>
+      <span class="metric">いいね 616</span>
+      <span class="metric">コメント 4</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=9qLVZcarJjk" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/9qLVZcarJjk/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/25 02:00 / YouTube - Sonya from Russia</div>
+    <h3 class="title">Why Russians actually like McDonald’s? 🍔 4$ “Happy” Meal in RUSSIA! | Russia Vlog 🇷🇺</h3>
+    <p class="summary">SNS話題として「Why Russians actually like McDonald’s? 🍔 4$ “Happy” Meal in RUSSIA! | Russia Vlog 🇷🇺」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 2,503</span>
+      <span class="metric">いいね 318</span>
+      <span class="metric">コメント 102</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=Z9VDjCWBM1g" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/Z9VDjCWBM1g/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/25 23:09 / YouTube -  峰月律-Minetsuki Ritsu- / 夢限大みゅーたいぷ</div>
+    <h3 class="title">【実写】久しぶりにマクド新作3種食べ比べする！！！！！！【峰月律/夢限大みゅーたいぷ】</h3>
+    <p class="summary">SNS話題として「【実写】久しぶりにマクド新作3種食べ比べする！！！！！！【峰月律/夢限大みゅーたいぷ】」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 2,398</span>
+      <span class="metric">いいね 200</span>
+      <span class="metric">コメント 15</span>
+      
+    </div>
+    <p class="reason">マクドナルドに直接言及</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                    <a class="card card-link" href="https://www.youtube.com/watch?v=rR0dlEBdLh4" target="_blank" rel="noopener noreferrer">
+  
+    <img class="thumb" src="https://i.ytimg.com/vi/rR0dlEBdLh4/maxresdefault.jpg" alt="">
+  
+  <div class="card-body">
+    <div class="source">2026/05/25 02:00 / YouTube - clary</div>
+    <h3 class="title">Is McDonald’s is hacking your brain? #marketingpsychology  #marketingtips</h3>
+    <p class="summary">SNS話題として「Is McDonald’s is hacking your brain? #marketingpsychology  #marketingtips」が注目されています。</p>
+    <div class="metrics">
+      <span class="metric">再生 7,747</span>
+      <span class="metric">いいね 52</span>
+      <span class="metric">コメント 4</span>
+      
+        <span class="metric">Shorts</span>
+      
+    </div>
+    <p class="reason">検索語に関連して取得。内容確認が必要</p>
+    <div class="source">動画を開く</div>
+  </div>
+</a>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">🍔</span>マクドナルド関連ニュース<span class="section-count">8件</span></h2>
+            
+              
+                
+                <section class="list collapsible" data-collapsible="official-2026-05-25">
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFBZUFpFV3NvMFRtTVdNUzNuSHBJTFJSUnN1aC1qazRrdEVHblVJVkhZZk5tVFItbXFBYVh4bmZLZWJSc2MzOGJnVTRmWlJuVVdVTUJDS21Cc3o0QU9PNFE?oc=5" target="_blank" rel="noopener noreferrer">【公式】マクドナルド 豊中上新田店 朝勤務クルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a></h3>
+    <p class="summary">マック/公式発表として「【公式】マクドナルド 豊中上新田店 朝勤務クルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE5pRFVLWHhKVGcxNFhDVDVvTllzWG0ycko5THhBRUo0cm1PTmhxYWtOdmxpc1lRQ1F6VnZTa2R3eU5WN2F4amhHMHlncW1XbmNTMjZZSUVMZjlFRWIz?oc=5" target="_blank" rel="noopener noreferrer">【公式】マクドナルド 勝川橋店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a></h3>
+    <p class="summary">マック/公式発表として「【公式】マクドナルド 勝川橋店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    
+                  
+                    
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Gdi01RGpmNHJ4eHRyTmRGTHNYai0zcThDZmJqOGttekVaX0N6ZUlpYm1MVGlzWUhsWDhJVDZXal90RmdmTXVaR09tSGlrS2w1dUNFdFllMTc5bXNs?oc=5" target="_blank" rel="noopener noreferrer">【公式】マクドナルド 放出店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a></h3>
+    <p class="summary">マック/公式発表として「【公式】マクドナルド 放出店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE1iYWF4NUp5TW1obm5KNmFBUTJGclRoSUctckhuNEdNemItcF9ZdU5FdDhiRjJsWHdMWEJwVWRDel9jWkdoNTZBVXhEcENWQ3huWXFBcFlUWjhLNkpF?oc=5" target="_blank" rel="noopener noreferrer">【公式】マクドナルド 金沢田上店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a></h3>
+    <p class="summary">マック/公式発表として「【公式】マクドナルド 金沢田上店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    </div>
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE1OR2J5aVRhZ1pHdXRXb1VhcXNCN1ZLNmN2bzVCQkxQNXpHMjczdUktc0E3Q0pkOHJUUGxNamdsYzV4dTZHV2pqdUNseVZBUlI3TGlQTTBOdDR6RDFF?oc=5" target="_blank" rel="noopener noreferrer">【公式】マクドナルド 大府共和店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a></h3>
+    <p class="summary">マック/公式発表として「【公式】マクドナルド 大府共和店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    </div>
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXkFVX3lxTE0tU2cyUnNFX3VQVmNWdFV5eXZhZUtLQ0xNRlB3enJhdXM0a3M0XzRZUE81UFdKUWxZajhBbkREZEhZRkJ0dVR4XzQzTXZMd2hSelg5QTV4RC1wRHZ1OGc?oc=5" target="_blank" rel="noopener noreferrer">【公式】マクドナルド 放出店 夜間勤務クルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a></h3>
+    <p class="summary">マック/公式発表として「【公式】マクドナルド 放出店 夜間勤務クルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    </div>
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Nd2VCZWkxc3VQdmxRTnRhTnN2UllzT1pJaEhwSDhTWWh2WlZLUUhxLTN0SEZFZGREYUxON0NxY1ZjaUNjV0lVbGdBTFQ5TU5oOGNPZzJKUGNTcmpU?oc=5" target="_blank" rel="noopener noreferrer">【公式】マクドナルド べスピア堺インター店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a></h3>
+    <p class="summary">マック/公式発表として「【公式】マクドナルド べスピア堺インター店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社」が注目されています。</p>
+    <div class="source">マクドナルド公式サイト</div>
+  </div>
+</article>
+                    </div>
+                  
+                    <div class="extra-item">
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 12:05</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiVEFVX3lxTE9BcjJzclMzSmpwWFhpSnhZNzhlV0lJRUFENGNRNEY1bmpwYXBIUWlDZUhjUUx5MF9aSFJUajF3LUt1dWQ1d0NVOHVjVU1pcTdhVWd1bQ?oc=5" target="_blank" rel="noopener noreferrer">マクドナルドに「果物たのしむ」夏ドリンク、復活＆新作の2品まもなくスタート</a></h3>
+    <p class="summary">マック/公式発表として「マクドナルドに「果物たのしむ」夏ドリンク、復活＆新作の2品まもなくスタート」が注目されています。</p>
+    <div class="source">Google News - マクドナルド</div>
+  </div>
+</article>
+                    </div>
+                  
+                  
+                    <button class="show-more" type="button" data-toggle="official-2026-05-25">さらに表示</button>
+                  
+                </section>
+              
+            
+          
+            
+            <h2><span class="h2-icon">📱</span>X / Instagram / TikTokで伸びている話題</h2>
+            
+              <p class="empty">該当データはありません。</p>
+            
+          
+
+          
+          
+          
+          <h2><span class="h2-icon">🏁</span>競合・隣接業界の動き<span class="section-count">3件</span></h2>
+          
+          
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">モスバーガー</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 06:47</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxNVlZDSTJkaVIzMnNNc0RXMFhBT0tjcEFiZklyUFJiYjRNa3VmN0FWR01RRTlpaThPOTlmakpGaHhHQXVoUDNnejhVb291ZDR4cF9JWUh6MEE3a285eEIxYjNCLXF4MXpGakdlT2JwR0pWdHRPc3pFMEQ2TktqdzdjLWtma2V3M251?oc=5" target="_blank" rel="noopener noreferrer">モスバーガーで「420円の新商品」を飲んだ正直な感想（進撃のグルメ） - エキスパート</a></h3>
+    <p class="summary">競合動向として「モスバーガーで「420円の新商品」を飲んだ正直な感想（進撃のグルメ） - エキスパート」が注目されています。</p>
+    <div class="source">モスバーガー - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">バーガーキング</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 05:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiRkFVX3lxTE50VkhwQ3pmaV9PYVFTaXl1ZGVUV1d2U3ExcDhHejVrN24wSG15UUdSaldBbVN4MEY1b0xleXZ1TmxJZU1MX3c?oc=5" target="_blank" rel="noopener noreferrer">4種のきのこをこだわりのチーズバンズでサンド！バーガーキング「マッシュルームアグリーバーガー」</a></h3>
+    <p class="summary">競合動向として「4種のきのこをこだわりのチーズバンズでサンド！バーガーキング「マッシュルームアグリーバーガー」」が注目されています。</p>
+    <div class="source">バーガーキング - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+              <div class="competitor-company">
+                <div class="competitor-company-name">ロッテリア</div>
+                <section class="list">
+                  
+                    <article class="news-row">
+  <div class="news-date">2026/05/25 16:00</div>
+  <div>
+    <h3 class="title"><a class="title-link" href="https://news.google.com/rss/articles/CBMiU0FVX3lxTFBUSmZuR3dGMElnUWRpZVM4dU9rUUFWMU84ZlppcHNlaEw0UXdzblNyV29LYUJGbDhxYkczTTBMOFYzY0s0UEtvWjd3MHJYRzJfRzN30gFYQVVfeXFMUG1FeXoyMmtsNmNoUTJNVVAxMjNlSWxPNTZ3UU9acFlRTFg5YTcwRU5KUS0zdy1SODRQcGEtUTc0MkRQNkVGUFJ2cFdmWFU3bGhtV19icG5ucQ?oc=5" target="_blank" rel="noopener noreferrer">山の日記念！ロッテリアで1日限定山盛りポテト半額</a></h3>
+    <p class="summary">競合動向として「山の日記念！ロッテリアで1日限定山盛りポテト半額」が注目されています。</p>
+    <div class="source">ロッテリア - ニュース</div>
+  </div>
+</article>
+                  
+                </section>
+              </div>
+            
+          
+
+          
+          <h2><span class="h2-icon">📚</span>書籍・出版情報<span class="section-count">5件</span></h2>
+          
+            <section class="list">
+              
+                <article class="book-row">
+  <div class="book-meta">
+    
+      <div class="book-author">著者: 鈴木 大介</div>
+    
+    <div class="source" style="margin-top:4px">国立国会図書館</div>
+  </div>
+  <div>
+    <h3 class="title">
+      <a class="title-link" href="https://ndlsearch.ndl.go.jp/books/R100000136-I1050026436066321664" target="_blank" rel="noopener noreferrer">損益計算書からみる日本マクドナルドの経営戦略</a>
+    </h3>
+    <p class="summary">書籍「損益計算書からみる日本マクドナルドの経営戦略」がマーケティング担当者の参考になります。</p>
+  </div>
+</article>
+              
+                <article class="book-row">
+  <div class="book-meta">
+    
+      <div class="book-author">著者: 村上, 信子</div>
+    
+    <div class="source" style="margin-top:4px">国立国会図書館</div>
+  </div>
+  <div>
+    <h3 class="title">
+      <a class="title-link" href="https://ndlsearch.ndl.go.jp/books/R100000136-I1050022457830086784" target="_blank" rel="noopener noreferrer">日本マクドナルド株式会社における広報</a>
+    </h3>
+    <p class="summary">書籍「日本マクドナルド株式会社における広報」がマーケティング担当者の参考になります。</p>
+  </div>
+</article>
+              
+                <article class="book-row">
+  <div class="book-meta">
+    
+      <div class="book-author">著者: 鮎川, 潤</div>
+    
+    <div class="source" style="margin-top:4px">国立国会図書館</div>
+  </div>
+  <div>
+    <h3 class="title">
+      <a class="title-link" href="https://ndlsearch.ndl.go.jp/books/R000000025-I012350007336679" target="_blank" rel="noopener noreferrer">アメリカ社会学会会長の犯罪学者と日本の刑事システムとの一〇〇年前の出会い : ジョン・ルイス・ギリン、キャロライン・マクドナルド、 有馬四郎助とキリスト教</a>
+    </h3>
+    <p class="summary">書籍「アメリカ社会学会会長の犯罪学者と日本の刑事システムとの一〇〇年前の出会い : ジョン・ルイス・ギリン、キャロライン・マクドナルド、 有馬四郎助とキリスト教」がマーケティング担当者の参考になります。</p>
+  </div>
+</article>
+              
+                <article class="book-row">
+  <div class="book-meta">
+    
+      <div class="book-author">著者: 梅澤 真由美</div>
+    
+    <div class="source" style="margin-top:4px">国立国会図書館</div>
+  </div>
+  <div>
+    <h3 class="title">
+      <a class="title-link" href="https://ndlsearch.ndl.go.jp/books/R000000004-I033803314" target="_blank" rel="noopener noreferrer">インタビュー 個店別PL管理とコンサルティングで支える 日本マクドナルドに聞く財務部門による店舗管理の実際</a>
+    </h3>
+    <p class="summary">書籍「インタビュー 個店別PL管理とコンサルティングで支える 日本マクドナルドに聞く財務部門による店舗管理の実際」がマーケティング担当者の参考になります。</p>
+  </div>
+</article>
+              
+                <article class="book-row">
+  <div class="book-meta">
+    
+      <div class="book-author">著者: 斎藤 由希子</div>
+    
+    <div class="source" style="margin-top:4px">国立国会図書館</div>
+  </div>
+  <div>
+    <h3 class="title">
+      <a class="title-link" href="https://ndlsearch.ndl.go.jp/books/R000000004-I033673191" target="_blank" rel="noopener noreferrer">インタビュー なぜ多くの人を採用し、維持できるのか マクドナルドは「らしさ」の追求でエンゲージメントを高める</a>
+    </h3>
+    <p class="summary">書籍「インタビュー なぜ多くの人を採用し、維持できるのか マクドナルドは「らしさ」の追求でエンゲージメントを高める」がマーケティング担当者の参考になります。</p>
+  </div>
+</article>
+              
+            </section>
+          
+
+          <h2><span class="h2-icon">🔗</span>参照URL一覧</h2>
+          <ol class="refs">
+            
+              <li><a href="https://www.youtube.com/watch?v=CrMcsCW5hcE">マックの新作うますぎる!!</a> / YouTube - パンナコタpannakota</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=rxiA4wagxxU">マックの新作デカくない、、、、？？</a> / YouTube - メンザいふ MenzaIf </li>
+            
+              <li><a href="https://www.youtube.com/watch?v=4SBw_PjoODg">El hack de los cajeros de McDonald's #shorts #mcdonalds</a> / YouTube - Curosiodades Culinarias</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=9qLVZcarJjk">Why Russians actually like McDonald’s? 🍔 4$ “Happy” Meal in RUSSIA! | Russia Vlog 🇷🇺</a> / YouTube - Sonya from Russia</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=Z9VDjCWBM1g">【実写】久しぶりにマクド新作3種食べ比べする！！！！！！【峰月律/夢限大みゅーたいぷ】</a> / YouTube -  峰月律-Minetsuki Ritsu- / 夢限大みゅーたいぷ</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=rR0dlEBdLh4">Is McDonald’s is hacking your brain? #marketingpsychology  #marketingtips</a> / YouTube - clary</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=7HdnDJAa_h8">#マクドナルド#シャカシャカ ポテト金沢名物黒カレー味#飯テロ</a> / YouTube - ユキピィー</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=h_FduVH8Vv0">【ご当地マック】喰らう🍔#mcdonald #mcdonalds #hamburger #ハンバーガー #マクドナルド #マック #新作 #飯テロ #グルメ #食事 #short #shorts</a> / YouTube - 食い道楽🐽ニ児ママの日常【坊まー】</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=yMqOKbXSRVg">マック新作食べてみた</a> / YouTube - azuちゃんねる</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=5_0NatwdT7I">「期間限定」マクドナルドの「ご当地マック」3種 食べてみた</a> / YouTube - おマキさんの休日（MAKI）</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=UyM1es2JNmU">マクドナルドからご当地バーガーが登場🍔‼️あのご当地名物の味×ハンバーガーのコラボがたまらない！ #マクドナルド #ご当地バーガー #ご当地マック #マック新作</a> / YouTube - mamagirl公式チャンネル</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=zSw-fCm2yuo">NEW DRINKS at McDonald’s #mcdonalds #new #drinks</a> / YouTube - G Money Saver</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=7lZlsa5Psvo">マクドナルドで、ビッグマック倍マックを食べてたら、こんな感じになったので、更に見てみたのです</a> / YouTube - 月白琴音</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=V2zqZB0u4T4">新作のご当地マック食べる</a> / YouTube - ゆうたろう</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=NcAoAaED2IY">First time EVER trying McDonald’s breakfast… how’d I do with my order?? #foodreview #mcdonalds #sub</a> / YouTube - Eatzandtravelz</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFBZUFpFV3NvMFRtTVdNUzNuSHBJTFJSUnN1aC1qazRrdEVHblVJVkhZZk5tVFItbXFBYVh4bmZLZWJSc2MzOGJnVTRmWlJuVVdVTUJDS21Cc3o0QU9PNFE?oc=5">【公式】マクドナルド 豊中上新田店 朝勤務クルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE5pRFVLWHhKVGcxNFhDVDVvTllzWG0ycko5THhBRUo0cm1PTmhxYWtOdmxpc1lRQ1F6VnZTa2R3eU5WN2F4amhHMHlncW1XbmNTMjZZSUVMZjlFRWIz?oc=5">【公式】マクドナルド 勝川橋店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Gdi01RGpmNHJ4eHRyTmRGTHNYai0zcThDZmJqOGttekVaX0N6ZUlpYm1MVGlzWUhsWDhJVDZXal90RmdmTXVaR09tSGlrS2w1dUNFdFllMTc5bXNs?oc=5">【公式】マクドナルド 放出店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE1iYWF4NUp5TW1obm5KNmFBUTJGclRoSUctckhuNEdNemItcF9ZdU5FdDhiRjJsWHdMWEJwVWRDel9jWkdoNTZBVXhEcENWQ3huWXFBcFlUWjhLNkpF?oc=5">【公式】マクドナルド 金沢田上店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE1OR2J5aVRhZ1pHdXRXb1VhcXNCN1ZLNmN2bzVCQkxQNXpHMjczdUktc0E3Q0pkOHJUUGxNamdsYzV4dTZHV2pqdUNseVZBUlI3TGlQTTBOdDR6RDFF?oc=5">【公式】マクドナルド 大府共和店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTE0tU2cyUnNFX3VQVmNWdFV5eXZhZUtLQ0xNRlB3enJhdXM0a3M0XzRZUE81UFdKUWxZajhBbkREZEhZRkJ0dVR4XzQzTXZMd2hSelg5QTV4RC1wRHZ1OGc?oc=5">【公式】マクドナルド 放出店 夜間勤務クルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE5Nd2VCZWkxc3VQdmxRTnRhTnN2UllzT1pJaEhwSDhTWWh2WlZLUUhxLTN0SEZFZGREYUxON0NxY1ZjaUNjV0lVbGdBTFQ5TU5oOGNPZzJKUGNTcmpU?oc=5">【公式】マクドナルド べスピア堺インター店 マクドナルドクルー アルバイト・パート求人情報 | 日本マクドナルド株式会社</a> / マクドナルド公式サイト</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiVEFVX3lxTE9BcjJzclMzSmpwWFhpSnhZNzhlV0lJRUFENGNRNEY1bmpwYXBIUWlDZUhjUUx5MF9aSFJUajF3LUt1dWQ1d0NVOHVjVU1pcTdhVWd1bQ?oc=5">マクドナルドに「果物たのしむ」夏ドリンク、復活＆新作の2品まもなくスタート</a> / Google News - マクドナルド</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiakFVX3lxTE8wcF9LdGF5bnhvX2ZYaWlxOGVBeEh6a2h2M1p1YllHakNmd3RZeU5tWlA4TDBwZFBxam5Rd0ZwODdUcDd0dWh6eDAtR3dlcGV6VGs4c2JJYXd2cVRRbHRoR2VhQVZ6RkdzVkE?oc=5">本格グルメバーガーとふわふわパンケーキを楽しむアイランドスタイルダイナー「THE PACIFIC ROOM」が6月1日、立川・GREEN SPRINGSにグランドオープン！</a> / Google News - バーガー/ファストフード</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiU0FVX3lxTFBUSmZuR3dGMElnUWRpZVM4dU9rUUFWMU84ZlppcHNlaEw0UXdzblNyV29LYUJGbDhxYkczTTBMOFYzY0s0UEtvWjd3MHJYRzJfRzN30gFYQVVfeXFMUG1FeXoyMmtsNmNoUTJNVVAxMjNlSWxPNTZ3UU9acFlRTFg5YTcwRU5KUS0zdy1SODRQcGEtUTc0MkRQNkVGUFJ2cFdmWFU3bGhtV19icG5ucQ?oc=5">山の日記念！ロッテリアで1日限定山盛りポテト半額</a> / ロッテリア - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiiAFBVV95cUxNVlZDSTJkaVIzMnNNc0RXMFhBT0tjcEFiZklyUFJiYjRNa3VmN0FWR01RRTlpaThPOTlmakpGaHhHQXVoUDNnejhVb291ZDR4cF9JWUh6MEE3a285eEIxYjNCLXF4MXpGakdlT2JwR0pWdHRPc3pFMEQ2TktqdzdjLWtma2V3M251?oc=5">モスバーガーで「420円の新商品」を飲んだ正直な感想（進撃のグルメ） - エキスパート</a> / モスバーガー - ニュース</li>
+            
+              <li><a href="https://news.google.com/rss/articles/CBMiRkFVX3lxTE50VkhwQ3pmaV9PYVFTaXl1ZGVUV1d2U3ExcDhHejVrN24wSG15UUdSaldBbVN4MEY1b0xleXZ1TmxJZU1MX3c?oc=5">4種のきのこをこだわりのチーズバンズでサンド！バーガーキング「マッシュルームアグリーバーガー」</a> / バーガーキング - ニュース</li>
+            
+              <li><a href="https://ndlsearch.ndl.go.jp/books/R100000136-I1050026436066321664">損益計算書からみる日本マクドナルドの経営戦略</a> / 国立国会図書館</li>
+            
+              <li><a href="https://ndlsearch.ndl.go.jp/books/R100000136-I1050022457830086784">日本マクドナルド株式会社における広報</a> / 国立国会図書館</li>
+            
+              <li><a href="https://ndlsearch.ndl.go.jp/books/R000000025-I012350007336679">アメリカ社会学会会長の犯罪学者と日本の刑事システムとの一〇〇年前の出会い : ジョン・ルイス・ギリン、キャロライン・マクドナルド、 有馬四郎助とキリスト教</a> / 国立国会図書館</li>
+            
+              <li><a href="https://ndlsearch.ndl.go.jp/books/R000000004-I033803314">インタビュー 個店別PL管理とコンサルティングで支える 日本マクドナルドに聞く財務部門による店舗管理の実際</a> / 国立国会図書館</li>
+            
+              <li><a href="https://ndlsearch.ndl.go.jp/books/R000000004-I033673191">インタビュー なぜ多くの人を採用し、維持できるのか マクドナルドは「らしさ」の追求でエンゲージメントを高める</a> / 国立国会図書館</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=-pcDBccz0Ko">しばいぬがマックの限定食べてみた！ 1</a> / YouTube - どうもしばいぬです。</li>
+            
+              <li><a href="https://www.youtube.com/watch?v=WbKGicXaOIY">🐰マクドナルドの新作を食べに行きました！ㅣ Trying McDonald’s new menu item!</a> / YouTube - ロミーの小さな世界 | Romee’s Little World</li>
+            
+          </ol>
+        </section>
+      
+    
+  </main>
+  <script>
+    const tabs = document.querySelectorAll("[data-date]");
+    const panels = document.querySelectorAll("[data-panel]");
+    const currentDate = document.getElementById("current-date");
+    const datePicker = document.getElementById("date-picker");
+    const dateTrigger = document.getElementById("date-trigger");
+    const selectedDateLabel = document.getElementById("selected-date-label");
+
+    function activateReport(date) {
+      tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.date === date));
+      panels.forEach((panel) => panel.classList.toggle("active", panel.dataset.panel === date));
+      if (currentDate) currentDate.textContent = date;
+      if (selectedDateLabel) selectedDateLabel.textContent = date;
+      if (datePicker) datePicker.classList.remove("open");
+      if (dateTrigger) dateTrigger.setAttribute("aria-expanded", "false");
+      const activePanel = document.querySelector(`[data-panel="${date}"]`);
+      const currentWindow = document.getElementById("current-window");
+      if (currentWindow && activePanel) currentWindow.textContent = `対象期間: ${activePanel.dataset.window}`;
+      const url = new URL(window.location);
+      url.hash = date;
+      history.replaceState(null, "", url);
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => activateReport(tab.dataset.date));
+    });
+
+    if (dateTrigger && datePicker) {
+      dateTrigger.addEventListener("click", () => {
+        const isOpen = datePicker.classList.toggle("open");
+        dateTrigger.setAttribute("aria-expanded", String(isOpen));
+      });
+      document.addEventListener("click", (event) => {
+        if (!datePicker.contains(event.target)) {
+          datePicker.classList.remove("open");
+          dateTrigger.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+
+    const initialDate = window.location.hash.replace("#", "");
+    if (initialDate && document.querySelector(`[data-panel="${initialDate}"]`)) {
+      activateReport(initialDate);
+    }
+
+    document.querySelectorAll("[data-toggle]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = document.querySelector(`[data-collapsible="${button.dataset.toggle}"]`);
+        if (!target) return;
+        const expanded = target.classList.toggle("expanded");
+        button.textContent = expanded ? "閉じる" : "さらに表示";
+      });
+    });
+  </script>
+</body>
+</html>
