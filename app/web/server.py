@@ -40,7 +40,7 @@ def api_report_dates() -> list[str]:
     return list_report_dates()
 
 
-@app.get("/reports/index.html", response_class=HTMLResponse)
+@app.get("/docs/index.html", response_class=HTMLResponse)
 def report_index() -> HTMLResponse:
     return index()
 

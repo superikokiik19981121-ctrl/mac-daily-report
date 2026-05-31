@@ -15,7 +15,7 @@ load_dotenv(ROOT_DIR / ".env")
 class Settings:
     app_name: str = os.getenv("APP_NAME", "Mac Daily Intelligence")
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///data/mac_daily.db")
-    report_dir: Path = ROOT_DIR / os.getenv("REPORT_DIR", "reports")
+    report_dir: Path = ROOT_DIR / os.getenv("REPORT_DIR", "docs")
     sample_data_path: Path = ROOT_DIR / os.getenv("SAMPLE_DATA_PATH", "data/sample_sources.json")
     client_profile_path: Path = ROOT_DIR / os.getenv("CLIENT_PROFILE_PATH", "data/client_profile.json")
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
