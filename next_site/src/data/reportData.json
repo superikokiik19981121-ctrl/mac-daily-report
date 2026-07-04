@@ -1,6 +1,71 @@
 {
   "reports": [
     {
+      "date": "2026-07-04",
+      "window": "2026/07/04 00:00 - 2026/07/05 00:00",
+      "digest": [
+        "マック関連ニュースでは「マクドナルド「240円バーガー」を食べてみた感想（進撃のグルメ） - エキスパート」を確認しています。",
+        "競合・隣接業界では「KFC監修の辛口ポテチ登場 「レッドホットチキン味」と「グリーンホットウィング味」」を押さえておきたいです。",
+        "マック/公式発表として「マクドナルド「240円バーガー」を食べてみた感想（進撃のグルメ） - エキスパート」が注目されています。"
+      ],
+      "items": [
+        {
+          "id": 540,
+          "title": "マクドナルド「240円バーガー」を食べてみた感想（進撃のグルメ） - エキスパート",
+          "source_name": "Google News - マクドナルド",
+          "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQeGFCaXJjV3NJWGlzOU8yQjE5MlFMTzdqYkQ0a1YtZXQzZEdMOUgwQVpLMURiOGlxa1U0ZWN4bDEtS2YxaVZKMnBNanlYY1FTc0dBc0FfY3B1azZObDM2cS1HZEMtRWNjRnFGdFJaZ3prZllIb2lWYlUzdEdkSkxyTkZ2LUNISGF6?oc=5",
+          "published_at": "2026-07-04T23:31:43+09:00",
+          "report_date": "2026-07-04",
+          "category": "official",
+          "one_line_summary": "マック/公式発表として「マクドナルド「240円バーガー」を食べてみた感想（進撃のグルメ） - エキスパート」が注目されています。",
+          "original_excerpt": "マクドナルド「240円バーガー」を食べてみた感想（進撃のグルメ） - エキスパート &nbsp;&nbsp; Yahoo!ニュース",
+          "why_it_matters": "商品・キャンペーン・IRの一次情報として、担当業務の前提確認に直結します。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "朝会では、商品企画・SNS投稿・店頭POPのどれに活かせるかを分けて確認すると使いやすいです。",
+          "buzz_score": 25.0,
+          "raw_text": "マクドナルド「240円バーガー」を食べてみた感想（進撃のグルメ） - エキスパート &nbsp;&nbsp; Yahoo!ニュース",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-07-04 21:58:04"
+        },
+        {
+          "id": 541,
+          "title": "KFC監修の辛口ポテチ登場 「レッドホットチキン味」と「グリーンホットウィング味」",
+          "source_name": "KFC - ニュース",
+          "source_url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5oRXphaUNlWXFucmE1Vk55MC0teDNtVm9XZXBPUTlhZHpZckczTzlHMThKVUpTT2NZZnJYTGpsUXB1U1Y4LWtETkdZOXBjT2RlNnZjeE9GSUFQU2NQNXdlRktBMA?oc=5",
+          "published_at": "2026-07-04T09:00:00+09:00",
+          "report_date": "2026-07-04",
+          "category": "competitor",
+          "one_line_summary": "競合動向として「KFC監修の辛口ポテチ登場 「レッドホットチキン味」と「グリーンホットウィング味」」が注目されています。",
+          "original_excerpt": "KFC監修の辛口ポテチ登場 「レッドホットチキン味」と「グリーンホットウィング味」 &nbsp;&nbsp; Excite エキサイト",
+          "why_it_matters": "競合の価格、限定商品、販売導線の変化は、マクドナルドの企画比較軸になります。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "競合の勝ち筋を、マクドナルドならではの価格競争力・店舗網・デジタル戦略に翻訳して検討できます。",
+          "buzz_score": 16.0,
+          "raw_text": "KFC監修の辛口ポテチ登場 「レッドホットチキン味」と「グリーンホットウィング味」 &nbsp;&nbsp; Excite エキサイト",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-07-04 21:58:04"
+        }
+      ]
+    },
+    {
       "date": "2026-07-03",
       "window": "2026/07/03 00:00 - 2026/07/04 00:00",
       "digest": [
