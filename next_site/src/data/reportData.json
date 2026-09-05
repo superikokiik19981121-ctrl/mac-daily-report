@@ -1,6 +1,71 @@
 {
   "reports": [
     {
+      "date": "2026-09-05",
+      "window": "2026/09/05 00:00 - 2026/09/06 00:00",
+      "digest": [
+        "競合・隣接業界では「バーガーキングで、アプリ限定の『お得なクーポン』が配布されるみたい。人気セットが「300円引き」に！ 各日14時から」を押さえておきたいです。",
+        "競合動向として「バーガーキングで、アプリ限定の『お得なクーポン』が配布されるみたい。人気セットが「300円引き」に！ 各日14時から」が注目されています。",
+        "競合動向として「ケンタッキー「390円の新メニュー」を食べた正直な感想（進撃のグルメ） - エキスパート」が注目されています。"
+      ],
+      "items": [
+        {
+          "id": 1072,
+          "title": "バーガーキングで、アプリ限定の『お得なクーポン』が配布されるみたい。人気セットが「300円引き」に！ 各日14時から",
+          "source_name": "バーガーキング - ニュース",
+          "source_url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE1vSHpONTZrb0tRckpQeWdtTFN1Vk9pcjhLa0F1Wm5iSnNycG9nUUkyRTdrOW42UXRQWGhBc3Vzc1NLUHdieFR1dHlab0FNR2lBX0xhUlNoMUNyR01aaHc?oc=5",
+          "published_at": "2026-09-05T23:04:26+09:00",
+          "report_date": "2026-09-05",
+          "category": "competitor",
+          "one_line_summary": "競合動向として「バーガーキングで、アプリ限定の『お得なクーポン』が配布されるみたい。人気セットが「300円引き」に！ 各日14時から」が注目されています。",
+          "original_excerpt": "バーガーキングで、アプリ限定の『お得なクーポン』が配布されるみたい。人気セットが「300円引き」に！ 各日14時から &nbsp;&nbsp; 神戸ジャーナル",
+          "why_it_matters": "競合の価格、限定商品、販売導線の変化は、マクドナルドの企画比較軸になります。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "競合の勝ち筋を、マクドナルドならではの価格競争力・店舗網・デジタル戦略に翻訳して検討できます。",
+          "buzz_score": 16.0,
+          "raw_text": "バーガーキングで、アプリ限定の『お得なクーポン』が配布されるみたい。人気セットが「300円引き」に！ 各日14時から &nbsp;&nbsp; 神戸ジャーナル",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-09-05 22:38:37"
+        },
+        {
+          "id": 1073,
+          "title": "ケンタッキー「390円の新メニュー」を食べた正直な感想（進撃のグルメ） - エキスパート",
+          "source_name": "KFC - ニュース",
+          "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQdlhyelZ3VUtwUzRpbUNMclAxQWp0YnYwcDU4ZFpEd1JrNjEtUkc4c2tRZXdiSGFSS3R6bDF4SVZVZ3ZlakRLT3VEN3dwamtKdkhCRTVpY1l6dV9CTVlmVWFOQ1gxdmlhNDNYNlJld25oWkpYd0RiS2t2MkRmYWxmaVUtOVE0VXdL?oc=5",
+          "published_at": "2026-09-05T14:34:23+09:00",
+          "report_date": "2026-09-05",
+          "category": "competitor",
+          "one_line_summary": "競合動向として「ケンタッキー「390円の新メニュー」を食べた正直な感想（進撃のグルメ） - エキスパート」が注目されています。",
+          "original_excerpt": "ケンタッキー「390円の新メニュー」を食べた正直な感想（進撃のグルメ） - エキスパート &nbsp;&nbsp; Yahoo!ニュース",
+          "why_it_matters": "競合の価格、限定商品、販売導線の変化は、マクドナルドの企画比較軸になります。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "競合の勝ち筋を、マクドナルドならではの価格競争力・店舗網・デジタル戦略に翻訳して検討できます。",
+          "buzz_score": 16.0,
+          "raw_text": "ケンタッキー「390円の新メニュー」を食べた正直な感想（進撃のグルメ） - エキスパート &nbsp;&nbsp; Yahoo!ニュース",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-09-05 22:38:37"
+        }
+      ]
+    },
+    {
       "date": "2026-09-04",
       "window": "2026/09/04 00:00 - 2026/09/05 00:00",
       "digest": [
