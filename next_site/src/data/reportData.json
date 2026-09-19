@@ -1,6 +1,71 @@
 {
   "reports": [
     {
+      "date": "2026-09-19",
+      "window": "2026/09/19 00:00 - 2026/09/20 00:00",
+      "digest": [
+        "競合・隣接業界では「KFCとオレオの異色コラボ！ “黒いチキンサンド”が登場（海外）」を押さえておきたいです。",
+        "競合動向として「KFCとオレオの異色コラボ！ “黒いチキンサンド”が登場（海外）」が注目されています。",
+        "競合動向として「モスバーガーが冷食産業に本格参入！構想から2年の「モスデリ 焼きおにバーガー」の狙い」が注目されています。"
+      ],
+      "items": [
+        {
+          "id": 1193,
+          "title": "KFCとオレオの異色コラボ！ “黒いチキンサンド”が登場（海外）",
+          "source_name": "KFC - ニュース",
+          "source_url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQVFc0N0s3dzluOFFhUG44WkZXZ2p1TEtFN2g2b1U5V05aLXFMRFBZS2RjYnhtVmRCa2M2MnQwdlJTWFFINjRnVEpqVktjdEwzRmFjdWFiQzhwRjY3TnE5RDk2SVFEbkVfODQ1ZF9UY182MVltVWtwd0JNYmdQUjc4QS0wRlRKZzVmcjRIM1NHcl9KY1VDZVJ5RE1abHdTU29vT3VRLUJObEVhcEpIWjN0WXM2TFhHSG5NZEHSAboBQVVfeXFMUFRXNDdLN3c5bjhRYVBuOFpGV2dqdUxLRTdoNm9VOVdOWi1xTERQWUtkY2J4bVZkQmtjNjJ0MHZSU1hRSDY0Z1RKalZLY3RMM0ZhY3VhYkM4cEY2N05xOUQ5NklRRG5FXzg0NWRfVGNfNjFZbVVrcHdCTWJnUFI3OEEtMEZUSmc1ZnI0SDNTR3JfSmNVQ2VSeURNWmx3U1Nvb091US1CTmxFYXBKSFozdFlzNkxYR0huTWRB?oc=5",
+          "published_at": "2026-09-19T18:07:00+09:00",
+          "report_date": "2026-09-19",
+          "category": "competitor",
+          "one_line_summary": "競合動向として「KFCとオレオの異色コラボ！ “黒いチキンサンド”が登場（海外）」が注目されています。",
+          "original_excerpt": "KFCとオレオの異色コラボ！ “黒いチキンサンド”が登場（海外） &nbsp;&nbsp; ｄメニューニュース",
+          "why_it_matters": "競合の価格、限定商品、販売導線の変化は、マクドナルドの企画比較軸になります。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "競合の勝ち筋を、マクドナルドならではの価格競争力・店舗網・デジタル戦略に翻訳して検討できます。",
+          "buzz_score": 16.0,
+          "raw_text": "KFCとオレオの異色コラボ！ “黒いチキンサンド”が登場（海外） &nbsp;&nbsp; ｄメニューニュース",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-09-19 22:40:41"
+        },
+        {
+          "id": 1192,
+          "title": "モスバーガーが冷食産業に本格参入！構想から2年の「モスデリ 焼きおにバーガー」の狙い",
+          "source_name": "モスバーガー - ニュース",
+          "source_url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQXzFMbjJHZGNtdUtGOEVyV3pQYnV1LVQ5YkVZbk1rQjFBaHVEWTVRZElFMFh3eW5vWXA0ZnBsMXo3ZkF6R21GbHJPWk5aQUVVa00tTDJIZlNtM1JHaTRJY09YaUYxaWtSajZPYzdyMGhzeDFRRWxESUFhcTg1SDRNRWlTQ0lncE13NmJmRktB0gGKAUFVX3lxTE4tai05ZDdHa0dUbjBJdHdOd0FSdU9yTVJlTzAycGNzRDVIUzR0d1ctMzJVczV5UHJzSE0xVjloOWp5N29DeXNmTkV2MHBqX1pId2Qta3owTjBFYS1DQmlvaE84ZjRiYnlQaHlDUmdpZy1ydV9JM05GaDg1ZnlBYThINXFORldPWWJZdw?oc=5",
+          "published_at": "2026-09-19T12:00:00+09:00",
+          "report_date": "2026-09-19",
+          "category": "competitor",
+          "one_line_summary": "競合動向として「モスバーガーが冷食産業に本格参入！構想から2年の「モスデリ 焼きおにバーガー」の狙い」が注目されています。",
+          "original_excerpt": "モスバーガーが冷食産業に本格参入！構想から2年の「モスデリ 焼きおにバーガー」の狙い &nbsp;&nbsp; ｄメニューニュース",
+          "why_it_matters": "競合の価格、限定商品、販売導線の変化は、マクドナルドの企画比較軸になります。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "競合の勝ち筋を、マクドナルドならではの価格競争力・店舗網・デジタル戦略に翻訳して検討できます。",
+          "buzz_score": 16.0,
+          "raw_text": "モスバーガーが冷食産業に本格参入！構想から2年の「モスデリ 焼きおにバーガー」の狙い &nbsp;&nbsp; ｄメニューニュース",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-09-19 22:40:41"
+        }
+      ]
+    },
+    {
       "date": "2026-09-18",
       "window": "2026/09/18 00:00 - 2026/09/19 00:00",
       "digest": [
