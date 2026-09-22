@@ -1,6 +1,43 @@
 {
   "reports": [
     {
+      "date": "2026-09-22",
+      "window": "2026/09/22 00:00 - 2026/09/23 00:00",
+      "digest": [
+        "マック関連ニュースでは「マクドナルド、春新作「いちごショートケーキパイ」3・11より限定発売 まるでショートケーキのような、サクふわ・とろ～り食感」を確認しています。",
+        "マック/公式発表として「マクドナルド、春新作「いちごショートケーキパイ」3・11より限定発売 まるでショートケーキのような、サクふわ・とろ～り食感」が注目されています。"
+      ],
+      "items": [
+        {
+          "id": 1203,
+          "title": "マクドナルド、春新作「いちごショートケーキパイ」3・11より限定発売 まるでショートケーキのような、サクふわ・とろ～り食感",
+          "source_name": "Google News - マクドナルド",
+          "source_url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFA0eXdyM0FIZWsyalhCVGk4bGpJRVFZWVktTGpZYXJyWlRON05KLUJ3Y3NwVS1TSGw4SUF6THU5aGVaSmZNanFiVXNVYnhwdlNzU3c?oc=5",
+          "published_at": "2026-09-22T18:33:30+09:00",
+          "report_date": "2026-09-22",
+          "category": "official",
+          "one_line_summary": "マック/公式発表として「マクドナルド、春新作「いちごショートケーキパイ」3・11より限定発売 まるでショートケーキのような、サクふわ・とろ～り食感」が注目されています。",
+          "original_excerpt": "マクドナルド、春新作「いちごショートケーキパイ」3・11より限定発売 まるでショートケーキのような、サクふわ・とろ～り食感 &nbsp;&nbsp; 山陽新聞",
+          "why_it_matters": "商品・キャンペーン・IRの一次情報として、担当業務の前提確認に直結します。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "朝会では、商品企画・SNS投稿・店頭POPのどれに活かせるかを分けて確認すると使いやすいです。",
+          "buzz_score": 25.0,
+          "raw_text": "マクドナルド、春新作「いちごショートケーキパイ」3・11より限定発売 まるでショートケーキのような、サクふわ・とろ～り食感 &nbsp;&nbsp; 山陽新聞",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-09-22 23:29:44"
+        }
+      ]
+    },
+    {
       "date": "2026-09-21",
       "window": "2026/09/21 00:00 - 2026/09/22 00:00",
       "digest": [
