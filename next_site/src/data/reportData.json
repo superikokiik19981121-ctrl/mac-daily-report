@@ -1,6 +1,71 @@
 {
   "reports": [
     {
+      "date": "2026-10-26",
+      "window": "2026/10/26 00:00 - 2026/10/27 00:00",
+      "digest": [
+        "マック関連ニュースでは「マクドナルドの新メニュー8種類を紹介 また注文したくなるおいしさ（進撃のグルメ） - エキスパート」を確認しています。",
+        "競合・隣接業界では「ケンタッキー、実施中のキャンペーンを中止 ニチレイグループのシステム障害の影響」を押さえておきたいです。",
+        "マック/公式発表として「マクドナルドの新メニュー8種類を紹介 また注文したくなるおいしさ（進撃のグルメ） - エキスパート」が注目されています。"
+      ],
+      "items": [
+        {
+          "id": 1507,
+          "title": "マクドナルドの新メニュー8種類を紹介 また注文したくなるおいしさ（進撃のグルメ） - エキスパート",
+          "source_name": "Google News - マクドナルド",
+          "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPNTFxUi1zOWtNUkpZbnhMdzZOTjZ6bzZnWi1PWk5WTXRIZXVjaUU3OGZKY2JUdTFSNXNNSEQ0OWo5S1pjajkwa3kxOGN3bkljMGdpd1N3MnVGUzBIRWhRbDRNZDk0NHZ3RDMzZlpCQkZzWjJNQzhUV2JDd0ZWMVN3THd6Ym9tX0dv?oc=5",
+          "published_at": "2026-10-26T14:29:29+09:00",
+          "report_date": "2026-10-26",
+          "category": "official",
+          "one_line_summary": "マック/公式発表として「マクドナルドの新メニュー8種類を紹介 また注文したくなるおいしさ（進撃のグルメ） - エキスパート」が注目されています。",
+          "original_excerpt": "マクドナルドの新メニュー8種類を紹介 また注文したくなるおいしさ（進撃のグルメ） - エキスパート &nbsp;&nbsp; Yahoo!ニュース",
+          "why_it_matters": "商品・キャンペーン・IRの一次情報として、担当業務の前提確認に直結します。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "朝会では、商品企画・SNS投稿・店頭POPのどれに活かせるかを分けて確認すると使いやすいです。",
+          "buzz_score": 25.0,
+          "raw_text": "マクドナルドの新メニュー8種類を紹介 また注文したくなるおいしさ（進撃のグルメ） - エキスパート &nbsp;&nbsp; Yahoo!ニュース",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-10-27 00:14:51"
+        },
+        {
+          "id": 1508,
+          "title": "ケンタッキー、実施中のキャンペーンを中止 ニチレイグループのシステム障害の影響",
+          "source_name": "KFC - ニュース",
+          "source_url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1IcElmbDNHSlVnNEc0bXd2aGN4SUVTM3lZMVMzNkpYNmFObXdTS25yNUo1UXB3UnNJZnBBdUFXZ1VEbWdlRHJQSGpFNUw5SW1tWHptdUQyanZFcnlH?oc=5",
+          "published_at": "2026-10-26T01:19:32+09:00",
+          "report_date": "2026-10-26",
+          "category": "competitor",
+          "one_line_summary": "競合動向として「ケンタッキー、実施中のキャンペーンを中止 ニチレイグループのシステム障害の影響」が注目されています。",
+          "original_excerpt": "ケンタッキー、実施中のキャンペーンを中止 ニチレイグループのシステム障害の影響 &nbsp;&nbsp; 山陽新聞",
+          "why_it_matters": "競合の価格、限定商品、販売導線の変化は、マクドナルドの企画比較軸になります。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "競合の勝ち筋を、マクドナルドならではの価格競争力・店舗網・デジタル戦略に翻訳して検討できます。",
+          "buzz_score": 16.0,
+          "raw_text": "ケンタッキー、実施中のキャンペーンを中止 ニチレイグループのシステム障害の影響 &nbsp;&nbsp; 山陽新聞",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-10-27 00:14:51"
+        }
+      ]
+    },
+    {
       "date": "2026-10-25",
       "window": "2026/10/25 00:00 - 2026/10/26 00:00",
       "digest": [
