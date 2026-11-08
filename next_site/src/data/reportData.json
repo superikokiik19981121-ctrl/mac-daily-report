@@ -1,6 +1,43 @@
 {
   "reports": [
     {
+      "date": "2026-11-07",
+      "window": "2026/11/07 00:00 - 2026/11/08 00:00",
+      "digest": [
+        "競合・隣接業界では「ロッテリアの和牛バーガー 真打・松阪牛は1500円！」を押さえておきたいです。",
+        "競合動向として「ロッテリアの和牛バーガー 真打・松阪牛は1500円！」が注目されています。"
+      ],
+      "items": [
+        {
+          "id": 1625,
+          "title": "ロッテリアの和牛バーガー 真打・松阪牛は1500円！",
+          "source_name": "ロッテリア - ニュース",
+          "source_url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5saXBXTW5LODBIRVVKb3hiSzVRZjg1dWZ5RjJZNm1wNU8yZS1XN3hfLWl4X3REUzJhOVdKVjBrbC05QnRLdG9UdTQ1YzBOdWN2X0Vr0gFYQVVfeXFMUHNOdXBCdTc4Zml0QmtVMl84Qkl1OXF1dTlQYjIyYWtRQkhQd3hCSEVZTDdjd20ySVZxQmJmS0lkRmhqY2RlbjNfNU5takRJUlRMLVVMMUloWg?oc=5",
+          "published_at": "2026-11-07T18:34:26+09:00",
+          "report_date": "2026-11-07",
+          "category": "competitor",
+          "one_line_summary": "競合動向として「ロッテリアの和牛バーガー 真打・松阪牛は1500円！」が注目されています。",
+          "original_excerpt": "ロッテリアの和牛バーガー 真打・松阪牛は1500円！ &nbsp;&nbsp; ウォーカープラス",
+          "why_it_matters": "競合の価格、限定商品、販売導線の変化は、マクドナルドの企画比較軸になります。",
+          "consumer_reaction": "明確な感情ワードは少ないものの、商品名やブランド名への関心が見られます。",
+          "insight_for_brand": "競合の勝ち筋を、マクドナルドならではの価格競争力・店舗網・デジタル戦略に翻訳して検討できます。",
+          "buzz_score": 16.0,
+          "raw_text": "ロッテリアの和牛バーガー 真打・松阪牛は1500円！ &nbsp;&nbsp; ウォーカープラス",
+          "platform": "web",
+          "like_count": 0,
+          "repost_count": 0,
+          "comment_count": 0,
+          "view_count": 0,
+          "impression_count": 0,
+          "post_url": null,
+          "thumbnail_url": null,
+          "growth_reason": "",
+          "sentiment_labels": "",
+          "created_at": "2026-11-08 00:11:54"
+        }
+      ]
+    },
+    {
       "date": "2026-11-06",
       "window": "2026/11/06 00:00 - 2026/11/07 00:00",
       "digest": [
